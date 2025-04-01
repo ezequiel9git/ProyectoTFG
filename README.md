@@ -5,11 +5,11 @@ Este proyecto consistirá en una aplicación donde que los terapeutas registren 
 <br>
 
 ## 📌 Funcionalidades del Proyecto
-✅ Registro e inicio de sesión para los terapeutas.
-✅ Creación y gestión de pacientes.
-✅ Registro de sesiones de terapia con notas.
-✅ Listado de pacientes y sus sesiones.
-✅ Autenticación con JWT.
+- Registro e inicio de sesión para los terapeutas.
+- Creación y gestión de pacientes.
+- Registro de sesiones de terapia con notas.
+- Listado de pacientes y sus sesiones.
+- Autenticación con JWT.
 
 <br>
 
