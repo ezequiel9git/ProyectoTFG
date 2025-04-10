@@ -7,6 +7,7 @@ class Paciente(models.Model):
     telefono = models.CharField(max_length=15)
     direccion = models.TextField() 
     asunto = models.TextField() # Descripción del problema enfrentado
+    medicacion =  models.TextField() # Medicación del paciente
     prioridad = models.TextField() # Prioridad de seguimiento
     terapeuta = models.ForeignKey(User, on_delete=models.CASCADE)  # Relación con el terapeuta
 
