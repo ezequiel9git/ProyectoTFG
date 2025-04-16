@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 const AuthContext = createContext();
 
@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         if (authTokens) {
-            setUser(jwt_decode(authTokens.access));
+            setUser(jwtDecode(authTokens.access));
         }
     }, [authTokens]);
 
@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await axios.post("http://127.0.0.1:8000/api/token/", { username, password });
             setAuthTokens(response.data);
-            setUser(jwt_decode(response.data.access));
+            setUser(jwtDecode(response.data.access));
             localStorage.setItem("authTokens", JSON.stringify(response.data));
         } catch (error) {
             console.error("Error en inicio de sesión:", error);
