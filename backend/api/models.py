@@ -6,9 +6,16 @@ class Paciente(models.Model):
     edad = models.IntegerField()
     telefono = models.CharField(max_length=15)
     direccion = models.TextField() 
-    asunto = models.TextField() # Descripción del problema enfrentado
-    medicacion = models.TextField(null=True, blank=True) # Medicación del paciente
-    prioridad = models.TextField() # Prioridad de seguimiento
+    asunto = models.CharField(max_length=200, blank=True, null=True)  
+    medicacion = models.TextField(blank=True, null=True)              
+    PRIORIDAD_CHOICES = [
+        ('Alta', 'Alta'),
+        ('Media', 'Media'),
+        ('Baja', 'Baja'),
+    ]
+    prioridad_seguimiento = models.CharField(
+        max_length=10, choices=PRIORIDAD_CHOICES, default='Media'
+    )
     terapeuta = models.ForeignKey(User, on_delete=models.CASCADE)  # Relación con el terapeuta
 
 
