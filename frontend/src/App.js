@@ -4,6 +4,10 @@ import Dashboard from "./pages/Dashboard";
 import { AuthProvider } from "./context/AuthContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import RegisterPage from "./pages/RegisterPage"; 
+
+
+
 function App() {
     return (
         <AuthProvider>
@@ -11,6 +15,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<LoginPage />} />
                     <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/register" element={<RegisterPage />} />
                 </Routes>
             </Router>
         </AuthProvider>
