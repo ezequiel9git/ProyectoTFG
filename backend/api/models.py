@@ -2,13 +2,13 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Paciente(models.Model):
-    nombre = models.CharField(max_length=100)
-    edad = models.IntegerField()
-    telefono = models.CharField(max_length=15)
-    direccion = models.TextField() 
-    asunto = models.CharField(max_length=200, blank=True, null=True)  
-    medicacion = models.TextField(blank=True, null=True)              
-    PRIORIDAD_CHOICES = [
+    nombre = models.CharField(max_length=100) # Nombre
+    edad = models.IntegerField()              # Edad
+    telefono = models.CharField(max_length=15) # Teléfono de contacto
+    direccion = models.TextField()             # Dirección de domicilio
+    asunto = models.CharField(max_length=200, blank=True, null=True) # Causa o problema a tratar
+    medicacion = models.TextField(blank=True, null=True)             # tratamiento médico
+    PRIORIDAD_CHOICES = [        # Prioridad de seguimiento de paciente
         ('Alta', 'Alta'),
         ('Media', 'Media'),
         ('Baja', 'Baja'),
@@ -26,8 +26,8 @@ class Paciente(models.Model):
 
 
 class Sesion(models.Model):
-    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, related_name="sesiones")
-    fecha = models.DateTimeField(auto_now_add=True)
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, related_name="sesiones") # Paciente
+    fecha = models.DateTimeField(auto_now_add=True) # fecha de la sesión
     evaluación = models.TextField() # Informe de evaluación de la sesión
     actividades = models.TextField() # Tareas programadas para el paciente
     proximasesion = models.TextField() # Anotaciones para la próxima sesión

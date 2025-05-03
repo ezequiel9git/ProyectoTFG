@@ -5,10 +5,12 @@ const SesionForm = ({ authTokens, pacientes, onAddSesion }) => {
     const [pacienteId, setPacienteId] = useState("");
     const [fecha, setFecha] = useState("");
     const [notas, setNotas] = useState("");
+    const [actividades, setActividades] = useState("");
+    const [proximasesion, setProximaSesion] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const sesion = { paciente: pacienteId, fecha, notas };
+        const sesion = { paciente: pacienteId, fecha, notas, actividades, proximasesion };
         try {
             await axios.post("http://127.0.0.1:8000/api/sesiones/", sesion, {
                 headers: { Authorization: `Bearer ${authTokens.access}` },
@@ -17,6 +19,8 @@ const SesionForm = ({ authTokens, pacientes, onAddSesion }) => {
             setPacienteId("");
             setFecha("");
             setNotas("");
+            setActividades("");
+            setProximaSesion("");
         } catch (error) {
             console.error("Error al crear sesión:", error);
         }
@@ -42,6 +46,19 @@ const SesionForm = ({ authTokens, pacientes, onAddSesion }) => {
                 value={notas}
                 onChange={(e) => setNotas(e.target.value)}
             />
+            <textarea
+                className="form-control mb-2"
+                placeholder="Actividades programadas"
+                value={notas}
+                onChange={(e) => setActividades(e.target.value)}
+            />
+            <textarea
+                className="form-control mb-2"
+                placeholder="Notas de la próxima sesión"
+                value={notas}
+                onChange={(e) => setProximaSesion(e.target.value)}
+            />
+            
             <button type="submit" className="btn btn-success">Agregar Sesión</button>
         </form>
     );
