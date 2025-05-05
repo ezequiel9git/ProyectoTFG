@@ -1,25 +1,59 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import LoginPage from "./pages/LoginPage";
-import Dashboard from "./pages/Dashboard";
-import { AuthProvider } from "./context/AuthContext";
-import "bootstrap/dist/css/bootstrap.min.css";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
-import RegisterPage from "./pages/RegisterPage"; 
+import { AuthProvider } from './context/AuthContext';
+import PrivateRoute from './utils/PrivateRoute';
 
-
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import Dashboard from './pages/Dashboard';
+import PacientesPage from './pages/PacientesPage';
+import SesionesPage from './pages/SesionesPage';
 
 function App() {
-    return (
-        <AuthProvider>
-            <Router>
-                <Routes>
-                    <Route path="/" element={<LoginPage />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/register" element={<RegisterPage />} />
-                </Routes>
-            </Router>
-        </AuthProvider>
-    );
+  return (
+    <Router>
+      <AuthProvider>
+        <Routes>
+          {/* Rutas públicas */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+
+          {/* Rutas protegidas */}
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/pacientes"
+            element={
+              <PrivateRoute>
+                <PacientesPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/sesiones"
+            element={
+              <PrivateRoute>
+                <SesionesPage />
+              </PrivateRoute>
+            }
+          />
+
+          {/* Ruta raíz: redirecciona al dashboard si autenticado o al login */}
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+
+          {/* Ruta por defecto: redirige a login si no coincide ninguna */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </AuthProvider>
+    </Router>
+  );
 }
 
 export default App;

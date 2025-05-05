@@ -1,17 +1,19 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .views import PacienteViewSet, SesionViewSet
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-
-from .views import register_user # Registro usuario
-
-router = DefaultRouter()
-router.register(r'pacientes', PacienteViewSet)
-router.register(r'sesiones', SesionViewSet)
+from django.urls import path
+from rest_framework_simplejwt.views import TokenRefreshView
+from .views import (
+    RegisterView,
+    PacienteListCreateView,
+    SesionCreateView,
+    CustomTokenObtainPairView,
+)
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    # Autenticación
+    path('register/', RegisterView.as_view(), name='register'),
+    path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('register/', register_user, name='register'), # registro usurio
+
+    # Endpoints de pacientes y sesiones
+    path('pacientes/', PacienteListCreateView.as_view(), name='pacientes'),
+    path('sesiones/', SesionCreateView.as_view(), name='sesiones'),
 ]

@@ -1,53 +1,65 @@
-from django.shortcuts import render
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
-from .models import Paciente, Sesion
-from .serializers import PacienteSerializer, SesionSerializer
-
-# Importaciones pra el registro de usuario
-from rest_framework.decorators import api_view
+from rest_framework import generics, status
 from rest_framework.response import Response
 from django.contrib.auth.models import User
-from rest_framework import status
-from rest_framework_simplejwt.tokens import RefreshToken
+from .models import Paciente, Sesion
+from .serializers import UserSerializer, PacienteSerializer, SesionSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-# Clase Paciente
-class PacienteViewSet(viewsets.ModelViewSet):
+
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def create(self, request, *args, **kwargs):
+        username = request.data.get("username")
+        password = request.data.get("password")
+
+        if not username or not password:
+            return Response(
+                {"error": "Username y contraseña requeridos."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if User.objects.filter(username=username).exists():
+            return Response(
+                {"error": "El nombre de usuario ya existe."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        user = User.objects.create_user(username=username, password=password)
+        serializer = self.get_serializer(user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = TokenObtainPairSerializer
+
+    def post(self, request, *args, **kwargs):
+        try:
+            return super().post(request, *args, **kwargs)
+        except Exception as e:
+            print("🔥 Error interno en login:", str(e))  # Mensaje visible en terminal
+            return Response(
+                {"detail": f"Error interno: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class PacienteListCreateView(generics.ListCreateAPIView):
     queryset = Paciente.objects.all()
     serializer_class = PacienteSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        return self.queryset.filter(terapeuta=self.request.user)
-
     def perform_create(self, serializer):
-        serializer.save(terapeuta=self.request.user)
+        serializer.save(usuario=self.request.user)
 
-# Clase Sesión
-class SesionViewSet(viewsets.ModelViewSet):
+
+class SesionCreateView(generics.ListCreateAPIView):
     queryset = Sesion.objects.all()
     serializer_class = SesionSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        return self.queryset.filter(paciente__terapeuta=self.request.user)
-
-
-# Registro de usuario
-@api_view(['POST'])
-def register_user(request):
-    try:
-        user = User.objects.create_user( # Creación de usuario
-            username=request.data['username'],
-            email=request.data['email'],
-            password=request.data['password']
-        )
-        refresh = RefreshToken.for_user(user)
-        return Response({
-            "refresh": str(refresh),
-            "access": str(refresh.access_token)
-        })
-    
-    # Error de credenciales incorrectas
-    except Exception as e:
-        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    def perform_create(self, serializer):
+        serializer.save(terapeuta=self.request.user)

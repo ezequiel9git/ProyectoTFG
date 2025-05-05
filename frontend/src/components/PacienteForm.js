@@ -1,39 +1,154 @@
-import { useState } from "react";
+import React, { useState, useContext } from 'react';
+import axios from 'axios';
+import AuthContext from '../context/AuthContext';
 
-const PacienteForm = ({ onAddPaciente }) => {
-    const [nombre, setNombre] = useState("");
-    const [edad, setEdad] = useState("");
-    const [telefono, setTelefono] = useState("");
-    const [direccion, setDireccion] = useState("");
-    const [asunto, setAsunto] = useState("");
-    const [medicacion, setMedicacion] = useState("");
-    const [prioridad, setPrioridad] = useState("Media");
+const PacienteForm = ({ onPacienteCreado }) => {
+  const { authTokens } = useContext(AuthContext);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        onAddPaciente({ nombre, edad, telefono, direccion, asunto, medicacion, prioridad_seguimiento: prioridad });
-        
-        setNombre(""); setEdad(""); setTelefono(""); setDireccion("");
-        setAsunto(""); setMedicacion(""); setPrioridad("Media");
-    };
+  const [formData, setFormData] = useState({
+    nombre: '',
+    edad: '',
+    telefono: '',
+    direccion: '',
+    asunto: '',
+    medicacion: '',
+    prioridad_seguimiento: 'Media',
+  });
 
-    return (
-        <form onSubmit={handleSubmit} className="mb-3">
-            <input className="form-control mb-2" placeholder="Nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} />
-            <input className="form-control mb-2" placeholder="Edad" value={edad} onChange={(e) => setEdad(e.target.value)} />
-            <input className="form-control mb-2" placeholder="Teléfono" value={telefono} onChange={(e) => setTelefono(e.target.value)} />
-            <textarea className="form-control mb-2" placeholder="Dirección" value={direccion} onChange={(e) => setDireccion(e.target.value)} />
-            <input className="form-control mb-2" placeholder="Asunto" value={asunto} onChange={(e) => setAsunto(e.target.value)} />
-            <textarea className="form-control mb-2" placeholder="Medicación" value={medicacion} onChange={(e) => setMedicacion(e.target.value)} />
-            <select className="form-control mb-2" value={prioridad} onChange={(e) => setPrioridad(e.target.value)}>
-                <option value="Alta">Alta</option>
-                <option value="Media">Media</option>
-                <option value="Baja">Baja</option>
-            </select>
-            
-            <button type="submit" className="btn btn-success">Agregar Paciente</button>
-        </form>
-    );
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+
+  const handleChange = e => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const response = await axios.post(
+        '/api/pacientes/',
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${authTokens.access}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      setSuccess('Paciente creado con éxito.');
+      setFormData({
+        nombre: '',
+        edad: '',
+        telefono: '',
+        direccion: '',
+        asunto: '',
+        medicacion: '',
+        prioridad_seguimiento: 'Media',
+      });
+
+      if (onPacienteCreado) {
+        onPacienteCreado(response.data);
+      }
+    } catch (err) {
+      setError('Error al crear el paciente. Verifica los campos.');
+      console.error(err);
+    }
+  };
+
+  return (
+    <div className="card p-4 mt-3">
+      <h4>Agregar Paciente</h4>
+      {error && <div className="alert alert-danger">{error}</div>}
+      {success && <div className="alert alert-success">{success}</div>}
+      <form onSubmit={handleSubmit}>
+        <div className="mb-2">
+          <label>Nombre</label>
+          <input
+            type="text"
+            name="nombre"
+            className="form-control"
+            value={formData.nombre}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="mb-2">
+          <label>Edad</label>
+          <input
+            type="number"
+            name="edad"
+            className="form-control"
+            value={formData.edad}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="mb-2">
+          <label>Teléfono</label>
+          <input
+            type="text"
+            name="telefono"
+            className="form-control"
+            value={formData.telefono}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="mb-2">
+          <label>Dirección</label>
+          <textarea
+            name="direccion"
+            className="form-control"
+            value={formData.direccion}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="mb-2">
+          <label>Asunto</label>
+          <input
+            type="text"
+            name="asunto"
+            className="form-control"
+            value={formData.asunto}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="mb-2">
+          <label>Medicación</label>
+          <textarea
+            name="medicacion"
+            className="form-control"
+            value={formData.medicacion}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="mb-3">
+          <label>Prioridad de seguimiento</label>
+          <select
+            name="prioridad_seguimiento"
+            className="form-select"
+            value={formData.prioridad_seguimiento}
+            onChange={handleChange}
+          >
+            <option value="Alta">Alta</option>
+            <option value="Media">Media</option>
+            <option value="Baja">Baja</option>
+          </select>
+        </div>
+        <button type="submit" className="btn btn-primary">
+          Guardar Paciente
+        </button>
+      </form>
+    </div>
+  );
 };
 
 export default PacienteForm;
