@@ -15,7 +15,7 @@ class Paciente(models.Model):
         ('Baja', 'Baja'),
     ], default='Media')
 
-    terapeuta = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pacientes')  # <-- Añadido
+    terapeuta = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pacientes')
 
     def __str__(self):
         return self.nombre
@@ -24,7 +24,11 @@ class Paciente(models.Model):
 class Sesion(models.Model):
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, related_name='sesiones')
     fecha = models.DateField()
-    notas = models.TextField()
+    duracion = models.IntegerField(default=30, help_text="Duración en minutos")
+    estado_emocional = models.TextField(blank=True, null=True)
+    seguimiento_habitos = models.TextField(blank=True, null=True)
+    actividades = models.TextField(blank=True, null=True)
+    proxima_sesion = models.TextField(blank=True, null=True)
     seguimiento = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):

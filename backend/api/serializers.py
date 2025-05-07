@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import Paciente, Sesion
 
+
 # Serializer para el registro de usuarios
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,20 +21,24 @@ class UserSerializer(serializers.ModelSerializer):
 class SesionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sesion
-        fields = ['id', 'paciente', 'fecha', 'notas', 'seguimiento']
-        read_only_fields = ['id']
+        fields = [
+            'id', 'paciente', 'fecha', 'duracion',
+            'estado_emocional', 'seguimiento_habitos',
+            'actividades', 'proxima_sesion', 'seguimiento'
+        ]
+        read_only_fields = ['id', 'paciente']  # 👈 Corrección aplicada aquí
 
 
 # Serializer de pacientes (con sesiones anidadas opcionales)
 class PacienteSerializer(serializers.ModelSerializer):
     sesiones = SesionSerializer(many=True, read_only=True)
-    terapeuta = serializers.ReadOnlyField(source='terapeuta.username')  # <- Añadido
+    terapeuta = serializers.ReadOnlyField(source='terapeuta.username')
 
     class Meta:
         model = Paciente
         fields = [
             'id', 'nombre', 'edad', 'telefono', 'direccion',
             'asunto', 'medicacion', 'prioridad_seguimiento',
-            'sesiones', 'terapeuta'  # <- Incluido aquí también
+            'sesiones', 'terapeuta'
         ]
         read_only_fields = ['id', 'terapeuta']

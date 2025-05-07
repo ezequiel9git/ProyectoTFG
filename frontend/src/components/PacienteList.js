@@ -70,7 +70,7 @@ const PacienteList = () => {
                     <td>{paciente.prioridad_seguimiento}</td>
                     <td>
                       <Link
-                        to={`/pacientes/${paciente.id}`}
+                        to={`/pacientes/${paciente.id}/sesiones`}
                         className="btn btn-sm btn-outline-primary"
                       >
                         Ver Detalle

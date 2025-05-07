@@ -2,6 +2,7 @@ from rest_framework import generics, permissions
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 from .models import Paciente, Sesion
 from .serializers import UserSerializer, PacienteSerializer, SesionSerializer
 
@@ -54,11 +55,14 @@ class SesionListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         paciente_id = self.kwargs['paciente_id']
-        return Sesion.objects.filter(paciente__id=paciente_id, paciente__terapeuta=self.request.user)
+        return Sesion.objects.filter(
+            paciente__id=paciente_id,
+            paciente__terapeuta=self.request.user
+        )
 
     def perform_create(self, serializer):
         paciente_id = self.kwargs['paciente_id']
-        paciente = Paciente.objects.get(id=paciente_id, terapeuta=self.request.user)
+        paciente = get_object_or_404(Paciente, id=paciente_id, terapeuta=self.request.user)
         serializer.save(paciente=paciente)
 
 

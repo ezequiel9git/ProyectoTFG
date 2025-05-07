@@ -1,18 +1,22 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SesionForm = ({ pacienteId, onSesionCreada }) => {
   const { authTokens } = useContext(AuthContext);
 
   const [formData, setFormData] = useState({
     fecha: '',
-    notas: '',
     duracion: '',
+    estado_emocional: '',
+    seguimiento_habitos: '',
+    actividades: '',
+    proxima_sesion: '',
   });
 
   const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -25,11 +29,10 @@ const SesionForm = ({ pacienteId, onSesionCreada }) => {
   const handleSubmit = async e => {
     e.preventDefault();
     setError(null);
-    setSuccess(null);
 
     try {
       const response = await axios.post(
-        `/api/pacientes/${pacienteId}/sesiones/`,
+        `http://localhost:8000/api/pacientes/${pacienteId}/sesiones/`,
         formData,
         {
           headers: {
@@ -38,11 +41,16 @@ const SesionForm = ({ pacienteId, onSesionCreada }) => {
           },
         }
       );
-      setSuccess('Sesión creada con éxito.');
+
+      toast.success('Sesión creada con éxito 🎉');
+
       setFormData({
         fecha: '',
-        notas: '',
         duracion: '',
+        estado_emocional: '',
+        seguimiento_habitos: '',
+        actividades: '',
+        proxima_sesion: '',
       });
 
       if (onSesionCreada) {
@@ -55,10 +63,10 @@ const SesionForm = ({ pacienteId, onSesionCreada }) => {
   };
 
   return (
-    <div className="card p-4 mt-3">
-      <h4>Agregar Sesión</h4>
+    <div className="card p-4 mt-4">
+      <h4>Registrar nueva sesión</h4>
       {error && <div className="alert alert-danger">{error}</div>}
-      {success && <div className="alert alert-success">{success}</div>}
+
       <form onSubmit={handleSubmit}>
         <div className="mb-2">
           <label>Fecha</label>
@@ -83,11 +91,38 @@ const SesionForm = ({ pacienteId, onSesionCreada }) => {
           />
         </div>
         <div className="mb-2">
-          <label>Notas</label>
+          <label>Estado emocional</label>
           <textarea
-            name="notas"
+            name="estado_emocional"
             className="form-control"
-            value={formData.notas}
+            value={formData.estado_emocional}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="mb-2">
+          <label>Seguimiento de hábitos</label>
+          <textarea
+            name="seguimiento_habitos"
+            className="form-control"
+            value={formData.seguimiento_habitos}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="mb-2">
+          <label>Actividades</label>
+          <textarea
+            name="actividades"
+            className="form-control"
+            value={formData.actividades}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="mb-2">
+          <label>Próxima sesión</label>
+          <textarea
+            name="proxima_sesion"
+            className="form-control"
+            value={formData.proxima_sesion}
             onChange={handleChange}
           />
         </div>
@@ -95,6 +130,8 @@ const SesionForm = ({ pacienteId, onSesionCreada }) => {
           Guardar Sesión
         </button>
       </form>
+
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 };

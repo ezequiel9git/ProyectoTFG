@@ -24,21 +24,13 @@ const Dashboard = () => {
         <div className="col-md-6 mb-3">
           <div className="card shadow rounded-4 p-4">
             <h4>Pacientes</h4>
-            <p>Gestiona tu lista de pacientes.</p>
+            <p>Gestiona tu lista de pacientes y accede a sus sesiones individuales.</p>
             <Link to="/pacientes" className="btn btn-primary">
               Ir a Pacientes
             </Link>
           </div>
         </div>
-        <div className="col-md-6 mb-3">
-          <div className="card shadow rounded-4 p-4">
-            <h4>Sesiones</h4>
-            <p>Consulta y registra sesiones terapéuticas.</p>
-            <Link to="/sesiones" className="btn btn-primary">
-              Ir a Sesiones
-            </Link>
-          </div>
-        </div>
+        {/* Tarjeta de sesiones eliminada */}
       </div>
     </div>
   );

@@ -9,7 +9,7 @@ import RegisterPage from './pages/RegisterPage';
 import Dashboard from './pages/Dashboard';
 import PacientesPage from './pages/PacientesPage';
 import SesionesPage from './pages/SesionesPage';
-import PacienteDetailPage from './pages/PacienteDetailPage'; // ✅ nueva importación
+import PacienteDetailPage from './pages/PacienteDetailPage';
 
 function App() {
   return (
@@ -45,8 +45,10 @@ function App() {
               </PrivateRoute>
             }
           />
+
+          {/* ✅ Ruta corregida con pacienteId dinámico */}
           <Route
-            path="/sesiones"
+            path="/pacientes/:pacienteId/sesiones"
             element={
               <PrivateRoute>
                 <SesionesPage />
@@ -57,7 +59,7 @@ function App() {
           {/* Ruta raíz: redirecciona al dashboard si autenticado o al login */}
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-          {/* Ruta por defecto: redirige a login si no coincide ninguna */}
+          {/* Ruta por defecto */}
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </AuthProvider>
