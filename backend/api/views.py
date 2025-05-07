@@ -1,65 +1,71 @@
-from rest_framework import generics, status
-from rest_framework.response import Response
+from rest_framework import generics, permissions
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.models import User
 from .models import Paciente, Sesion
 from .serializers import UserSerializer, PacienteSerializer, SesionSerializer
-from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
-class RegisterView(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-    def create(self, request, *args, **kwargs):
-        username = request.data.get("username")
-        password = request.data.get("password")
-
-        if not username or not password:
-            return Response(
-                {"error": "Username y contraseña requeridos."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        if User.objects.filter(username=username).exists():
-            return Response(
-                {"error": "El nombre de usuario ya existe."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        user = User.objects.create_user(username=username, password=password)
-        serializer = self.get_serializer(user)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+# Token JWT personalizado con nombre de usuario
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['username'] = user.username
+        return token
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
-    serializer_class = TokenObtainPairSerializer
-
-    def post(self, request, *args, **kwargs):
-        try:
-            return super().post(request, *args, **kwargs)
-        except Exception as e:
-            print("🔥 Error interno en login:", str(e))  # Mensaje visible en terminal
-            return Response(
-                {"detail": f"Error interno: {str(e)}"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+    serializer_class = CustomTokenObtainPairSerializer
 
 
+# Registro de usuarios
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class = UserSerializer
+
+
+# Lista y creación de pacientes
 class PacienteListCreateView(generics.ListCreateAPIView):
-    queryset = Paciente.objects.all()
     serializer_class = PacienteSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
-    def perform_create(self, serializer):
-        serializer.save(usuario=self.request.user)
-
-
-class SesionCreateView(generics.ListCreateAPIView):
-    queryset = Sesion.objects.all()
-    serializer_class = SesionSerializer
-    permission_classes = [IsAuthenticated]
+    def get_queryset(self):
+        return Paciente.objects.filter(terapeuta=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(terapeuta=self.request.user)
+
+
+# Detalle, actualización y eliminación de pacientes
+class PacienteDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = PacienteSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Paciente.objects.filter(terapeuta=self.request.user)
+
+
+# Lista y creación de sesiones para un paciente específico
+class SesionListCreateView(generics.ListCreateAPIView):
+    serializer_class = SesionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        paciente_id = self.kwargs['paciente_id']
+        return Sesion.objects.filter(paciente__id=paciente_id, paciente__terapeuta=self.request.user)
+
+    def perform_create(self, serializer):
+        paciente_id = self.kwargs['paciente_id']
+        paciente = Paciente.objects.get(id=paciente_id, terapeuta=self.request.user)
+        serializer.save(paciente=paciente)
+
+
+# Detalle, actualización y eliminación de una sesión
+class SesionDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = SesionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Sesion.objects.filter(paciente__terapeuta=self.request.user)

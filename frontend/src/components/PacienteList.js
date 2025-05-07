@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 
 const PacienteList = () => {
@@ -12,7 +13,7 @@ const PacienteList = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('/api/pacientes/', {
+      const response = await axios.get('http://localhost:8000/api/pacientes/', {
         headers: {
           Authorization: `Bearer ${authTokens.access}`,
         },
@@ -47,12 +48,13 @@ const PacienteList = () => {
                 <th>Asunto</th>
                 <th>Medicación</th>
                 <th>Prioridad</th>
+                <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
               {pacientes.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="text-center">
+                  <td colSpan="8" className="text-center">
                     No hay pacientes registrados.
                   </td>
                 </tr>
@@ -66,6 +68,14 @@ const PacienteList = () => {
                     <td>{paciente.asunto || '-'}</td>
                     <td>{paciente.medicacion || '-'}</td>
                     <td>{paciente.prioridad_seguimiento}</td>
+                    <td>
+                      <Link
+                        to={`/pacientes/${paciente.id}`}
+                        className="btn btn-sm btn-outline-primary"
+                      >
+                        Ver Detalle
+                      </Link>
+                    </td>
                   </tr>
                 ))
               )}

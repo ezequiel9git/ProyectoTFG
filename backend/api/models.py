@@ -3,34 +3,29 @@ from django.contrib.auth.models import User
 
 
 class Paciente(models.Model):
-    nombre = models.CharField(max_length=100)  # Nombre
-    edad = models.IntegerField()               # Edad
-    telefono = models.CharField(max_length=15) # Teléfono de contacto
-    direccion = models.TextField()             # Dirección de domicilio
-    asunto = models.CharField(max_length=200, blank=True, null=True)  # Causa o problema a tratar
-    medicacion = models.TextField(blank=True, null=True)              # Tratamiento médico
-
-    PRIORIDAD_CHOICES = [
+    nombre = models.CharField(max_length=100)
+    edad = models.IntegerField()
+    telefono = models.CharField(max_length=20)
+    direccion = models.TextField()
+    asunto = models.CharField(max_length=255, blank=True, null=True)
+    medicacion = models.TextField(blank=True, null=True)
+    prioridad_seguimiento = models.CharField(max_length=20, choices=[
         ('Alta', 'Alta'),
         ('Media', 'Media'),
         ('Baja', 'Baja'),
-    ]
-    prioridad_seguimiento = models.CharField(
-        max_length=10, choices=PRIORIDAD_CHOICES, default='Media'
-    )
+    ], default='Media')
 
-    terapeuta = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pacientes')
+    terapeuta = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pacientes')  # <-- Añadido
 
     def __str__(self):
         return self.nombre
 
 
 class Sesion(models.Model):
-    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, related_name="sesiones")
-    fecha = models.DateTimeField(auto_now_add=True)
-    evaluación = models.TextField()
-    actividades = models.TextField()
-    proximasesion = models.TextField()
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, related_name='sesiones')
+    fecha = models.DateField()
+    notas = models.TextField()
+    seguimiento = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
-        return f"Sesión de {self.paciente.nombre} el {self.fecha.strftime('%d-%m-%Y')}"
+        return f"Sesión de {self.paciente.nombre} el {self.fecha}"

@@ -32,16 +32,13 @@ const PacienteForm = ({ onPacienteCreado }) => {
     setSuccess(null);
 
     try {
-      const response = await axios.post(
-        '/api/pacientes/',
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${authTokens.access}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      const response = await axios.post('http://localhost:8000/api/pacientes/', formData, {
+        headers: {
+          Authorization: `Bearer ${authTokens.access}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      
       setSuccess('Paciente creado con éxito.');
       setFormData({
         nombre: '',

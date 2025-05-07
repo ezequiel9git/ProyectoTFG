@@ -1,126 +1,98 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
 
-const SesionForm = () => {
+const SesionForm = ({ pacienteId, onSesionCreada }) => {
   const { authTokens } = useContext(AuthContext);
 
-  const [pacientes, setPacientes] = useState([]);
   const [formData, setFormData] = useState({
-    paciente: '',
-    evaluación: '',
-    actividades: '',
-    proximasesion: '',
+    fecha: '',
+    notas: '',
+    duracion: '',
   });
 
-  const [mensaje, setMensaje] = useState('');
-  const [error, setError] = useState('');
-
-  // Obtener lista de pacientes
-  useEffect(() => {
-    const fetchPacientes = async () => {
-      try {
-        const response = await axios.get('/api/pacientes/', {
-          headers: {
-            Authorization: `Bearer ${authTokens.access}`,
-          },
-        });
-        setPacientes(response.data);
-      } catch (err) {
-        setError('Error al cargar los pacientes.');
-      }
-    };
-
-    fetchPacientes();
-  }, [authTokens]);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   const handleChange = e => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
-    setMensaje('');
-    setError('');
+    setError(null);
+    setSuccess(null);
 
     try {
-      await axios.post('/api/sesiones/', formData, {
-        headers: {
-          Authorization: `Bearer ${authTokens.access}`,
-        },
-      });
-      setMensaje('Sesión registrada exitosamente.');
+      const response = await axios.post(
+        `/api/pacientes/${pacienteId}/sesiones/`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${authTokens.access}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      setSuccess('Sesión creada con éxito.');
       setFormData({
-        paciente: '',
-        evaluación: '',
-        actividades: '',
-        proximasesion: '',
+        fecha: '',
+        notas: '',
+        duracion: '',
       });
+
+      if (onSesionCreada) {
+        onSesionCreada(response.data);
+      }
     } catch (err) {
-      setError('Error al registrar la sesión.');
+      setError('Error al crear la sesión. Verifica los campos.');
+      console.error(err);
     }
   };
 
   return (
-    <div className="card p-4 shadow rounded-4 mt-3">
-      <h4>Registrar nueva sesión</h4>
-      {mensaje && <div className="alert alert-success">{mensaje}</div>}
+    <div className="card p-4 mt-3">
+      <h4>Agregar Sesión</h4>
       {error && <div className="alert alert-danger">{error}</div>}
-
+      {success && <div className="alert alert-success">{success}</div>}
       <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label>Paciente</label>
-          <select
-            name="paciente"
-            className="form-select"
-            value={formData.paciente}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Seleccione un paciente</option>
-            {pacientes.map(p => (
-              <option key={p.id} value={p.id}>
-                {p.nombre}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="mb-3">
-          <label>Evaluación</label>
-          <textarea
-            name="evaluación"
+        <div className="mb-2">
+          <label>Fecha</label>
+          <input
+            type="date"
+            name="fecha"
             className="form-control"
-            value={formData.evaluación}
+            value={formData.fecha}
             onChange={handleChange}
             required
           />
         </div>
-
-        <div className="mb-3">
-          <label>Actividades</label>
-          <textarea
-            name="actividades"
+        <div className="mb-2">
+          <label>Duración (minutos)</label>
+          <input
+            type="number"
+            name="duracion"
             className="form-control"
-            value={formData.actividades}
+            value={formData.duracion}
             onChange={handleChange}
             required
           />
         </div>
-
-        <div className="mb-3">
-          <label>Próxima sesión</label>
+        <div className="mb-2">
+          <label>Notas</label>
           <textarea
-            name="proximasesion"
+            name="notas"
             className="form-control"
-            value={formData.proximasesion}
+            value={formData.notas}
             onChange={handleChange}
           />
         </div>
-
-        <button type="submit" className="btn btn-success w-100">
-          Guardar sesión
+        <button type="submit" className="btn btn-primary">
+          Guardar Sesión
         </button>
       </form>
     </div>
