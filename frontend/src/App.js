@@ -10,6 +10,7 @@ import Dashboard from './pages/Dashboard';
 import PacientesPage from './pages/PacientesPage';
 import SesionesPage from './pages/SesionesPage';
 import PacienteDetailPage from './pages/PacienteDetailPage';
+import SesionDetailPage from './pages/SesionDetailPage';
 
 function App() {
   return (
@@ -42,6 +43,14 @@ function App() {
             element={
               <PrivateRoute>
                 <PacienteDetailPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/sesiones/:id"
+            element={
+              <PrivateRoute>
+                <SesionDetailPage />
               </PrivateRoute>
             }
           />

@@ -1,8 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
 
-const PacienteForm = ({ onPacienteCreado }) => {
+const PacienteForm = ({ pacienteEditado, onExito }) => {
   const { authTokens } = useContext(AuthContext);
 
   const [formData, setFormData] = useState({
@@ -18,6 +18,22 @@ const PacienteForm = ({ onPacienteCreado }) => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
+  useEffect(() => {
+    if (pacienteEditado) {
+      setFormData({ ...pacienteEditado });
+    } else {
+      setFormData({
+        nombre: '',
+        edad: '',
+        telefono: '',
+        direccion: '',
+        asunto: '',
+        medicacion: '',
+        prioridad_seguimiento: 'Media',
+      });
+    }
+  }, [pacienteEditado]);
+
   const handleChange = e => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -31,39 +47,45 @@ const PacienteForm = ({ onPacienteCreado }) => {
     setError(null);
     setSuccess(null);
 
+    const url = pacienteEditado
+      ? `http://localhost:8000/api/pacientes/${pacienteEditado.id}/`
+      : 'http://localhost:8000/api/pacientes/';
+    const method = pacienteEditado ? 'put' : 'post';
+
     try {
-      const response = await axios.post('http://localhost:8000/api/pacientes/', formData, {
+      await axios[method](url, formData, {
         headers: {
           Authorization: `Bearer ${authTokens.access}`,
           'Content-Type': 'application/json',
         },
       });
-      
-      setSuccess('Paciente creado con éxito.');
-      setFormData({
-        nombre: '',
-        edad: '',
-        telefono: '',
-        direccion: '',
-        asunto: '',
-        medicacion: '',
-        prioridad_seguimiento: 'Media',
-      });
 
-      if (onPacienteCreado) {
-        onPacienteCreado(response.data);
+      setSuccess(pacienteEditado ? 'Paciente actualizado con éxito.' : 'Paciente creado con éxito.');
+      if (!pacienteEditado) {
+        setFormData({
+          nombre: '',
+          edad: '',
+          telefono: '',
+          direccion: '',
+          asunto: '',
+          medicacion: '',
+          prioridad_seguimiento: 'Media',
+        });
       }
+      if (onExito) onExito();
+
     } catch (err) {
-      setError('Error al crear el paciente. Verifica los campos.');
       console.error(err);
+      setError('Error al guardar el paciente. Verifica los campos.');
     }
   };
 
   return (
     <div className="card p-4 mt-3">
-      <h4>Agregar Paciente</h4>
+      <h4>{pacienteEditado ? 'Editar Paciente' : 'Agregar Paciente'}</h4>
       {error && <div className="alert alert-danger">{error}</div>}
       {success && <div className="alert alert-success">{success}</div>}
+
       <form onSubmit={handleSubmit}>
         <div className="mb-2">
           <label>Nombre</label>
@@ -140,9 +162,21 @@ const PacienteForm = ({ onPacienteCreado }) => {
             <option value="Baja">Baja</option>
           </select>
         </div>
-        <button type="submit" className="btn btn-primary">
-          Guardar Paciente
-        </button>
+
+        <div className="d-flex gap-2">
+          <button type="submit" className="btn btn-primary">
+            {pacienteEditado ? 'Actualizar' : 'Guardar'}
+          </button>
+          {pacienteEditado && (
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => onExito && onExito()}
+            >
+              Cancelar edición
+            </button>
+          )}
+        </div>
       </form>
     </div>
   );
