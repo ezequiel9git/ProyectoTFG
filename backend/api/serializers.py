@@ -23,7 +23,7 @@ class SesionSerializer(serializers.ModelSerializer):
         model = Sesion
         fields = [
             'id', 'paciente', 'fecha', 'duracion',
-            'estado_emocional', 'seguimiento_habitos',
+            'estado_emocional', 'evaluacion', 'seguimiento_habitos',
             'actividades', 'proxima_sesion', 'seguimiento'
         ]
         read_only_fields = ['id', 'paciente']  # 👈 Corrección aplicada aquí

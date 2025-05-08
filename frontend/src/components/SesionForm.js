@@ -11,6 +11,7 @@ const SesionForm = ({ pacienteId, onSesionCreada }) => {
     fecha: '',
     duracion: '',
     estado_emocional: '',
+    evaluacion: '',
     seguimiento_habitos: '',
     actividades: '',
     proxima_sesion: '',
@@ -48,6 +49,7 @@ const SesionForm = ({ pacienteId, onSesionCreada }) => {
         fecha: '',
         duracion: '',
         estado_emocional: '',
+        evaluacion: '',
         seguimiento_habitos: '',
         actividades: '',
         proxima_sesion: '',
@@ -99,6 +101,15 @@ const SesionForm = ({ pacienteId, onSesionCreada }) => {
             onChange={handleChange}
           />
         </div>
+        <div className="mb-2">
+          <label>Evaluación de sesión</label>
+          <textarea
+            name="evaluacion"
+            className="form-control"
+            value={formData.evaluacion}
+            onChange={handleChange}
+          />
+        </div>        
         <div className="mb-2">
           <label>Seguimiento de hábitos</label>
           <textarea

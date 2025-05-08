@@ -68,6 +68,7 @@ const PacienteDetailPage = () => {
                 <p><strong>Fecha:</strong> {sesion.fecha}</p>
                 <p><strong>Duración:</strong> {sesion.duracion} min</p>
                 <p><strong>Estado emocional:</strong> {sesion.estado_emocional}</p>
+                <p><strong>Evaluación de sesión:</strong> {sesion.evaluacion}</p>
                 <p><strong>Seguimiento de hábitos:</strong> {sesion.seguimiento_habitos}</p>
                 <p><strong>Actividades:</strong> {sesion.actividades}</p>
                 <p><strong>Próxima sesión:</strong> {sesion.proxima_sesion}</p>

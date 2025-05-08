@@ -26,6 +26,7 @@ class Sesion(models.Model):
     fecha = models.DateField()
     duracion = models.IntegerField(default=30, help_text="Duración en minutos")
     estado_emocional = models.TextField(blank=True, null=True)
+    evaluacion = models.TextField(blank=True, null=True)
     seguimiento_habitos = models.TextField(blank=True, null=True)
     actividades = models.TextField(blank=True, null=True)
     proxima_sesion = models.TextField(blank=True, null=True)
