@@ -30,10 +30,20 @@ const Dashboard = () => {
             </Link>
           </div>
         </div>
-        {/* Tarjeta de sesiones eliminada */}
+
+        <div className="col-md-6 mb-3">
+          <div className="card shadow rounded-4 p-4">
+            <h4>Reportes</h4>
+            <p>Consulta estadísticas relevantes de pacientes y sesiones.</p>
+            <Link to="/reportes" className="btn btn-secondary">
+              Ver Reportes
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
 export default Dashboard;
+
