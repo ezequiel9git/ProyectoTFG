@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './utils/PrivateRoute';
+import PrivateLayout from './layouts/PrivateLayout';
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -14,22 +15,24 @@ import SesionDetailPage from './pages/SesionDetailPage';
 import ReportesPage from './pages/ReportesPage';
 import AgendaPage from './pages/AgendaPage';
 
-
 function App() {
   return (
     <Router>
       <AuthProvider>
         <Routes>
+
           {/* Rutas públicas */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 
-          {/* Rutas protegidas */}
+          {/* Rutas protegidas con layout */}
           <Route
             path="/dashboard"
             element={
               <PrivateRoute>
-                <Dashboard />
+                <PrivateLayout>
+                  <Dashboard />
+                </PrivateLayout>
               </PrivateRoute>
             }
           />
@@ -37,7 +40,9 @@ function App() {
             path="/pacientes"
             element={
               <PrivateRoute>
-                <PacientesPage />
+                <PrivateLayout>
+                  <PacientesPage />
+                </PrivateLayout>
               </PrivateRoute>
             }
           />
@@ -45,7 +50,19 @@ function App() {
             path="/pacientes/:id"
             element={
               <PrivateRoute>
-                <PacienteDetailPage />
+                <PrivateLayout>
+                  <PacienteDetailPage />
+                </PrivateLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/pacientes/:pacienteId/sesiones"
+            element={
+              <PrivateRoute>
+                <PrivateLayout>
+                  <SesionesPage />
+                </PrivateLayout>
               </PrivateRoute>
             }
           />
@@ -53,7 +70,9 @@ function App() {
             path="/sesiones/:id"
             element={
               <PrivateRoute>
-                <SesionDetailPage />
+                <PrivateLayout>
+                  <SesionDetailPage />
+                </PrivateLayout>
               </PrivateRoute>
             }
           />
@@ -61,7 +80,9 @@ function App() {
             path="/reportes"
             element={
               <PrivateRoute>
-                <ReportesPage />
+                <PrivateLayout>
+                  <ReportesPage />
+                </PrivateLayout>
               </PrivateRoute>
             }
           />
@@ -69,22 +90,14 @@ function App() {
             path="/agenda"
             element={
               <PrivateRoute>
-                <AgendaPage />
+                <PrivateLayout>
+                  <AgendaPage />
+                </PrivateLayout>
               </PrivateRoute>
             }
           />
 
-          {/* ✅ Ruta corregida con pacienteId dinámico */}
-          <Route
-            path="/pacientes/:pacienteId/sesiones"
-            element={
-              <PrivateRoute>
-                <SesionesPage />
-              </PrivateRoute>
-            }
-          />
-
-          {/* Ruta raíz: redirecciona al dashboard si autenticado o al login */}
+          {/* Redirección raíz */}
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
           {/* Ruta por defecto */}
