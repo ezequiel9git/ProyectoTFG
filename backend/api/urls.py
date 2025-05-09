@@ -6,6 +6,8 @@ from .views import (
     PacienteDetailView,
     SesionListCreateView,
     SesionDetailView,
+    CitaListCreateView, 
+    CitaDetailView,
 )
 from rest_framework_simplejwt.views import TokenRefreshView
 
@@ -22,4 +24,8 @@ urlpatterns = [
     # Sesiones por paciente
     path('pacientes/<int:paciente_id>/sesiones/', SesionListCreateView.as_view(), name='sesion-list-create'),
     path('sesiones/<int:pk>/', SesionDetailView.as_view(), name='sesion-detail'),
+
+    # 🗓️ Nuevas rutas para citas
+    path('citas/', CitaListCreateView.as_view(), name='cita_list_create'),
+    path('citas/<int:pk>/', CitaDetailView.as_view(), name='cita_detail'),
 ]

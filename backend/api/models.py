@@ -34,3 +34,13 @@ class Sesion(models.Model):
 
     def __str__(self):
         return f"Sesión de {self.paciente.nombre} el {self.fecha}"
+
+
+class Cita(models.Model):
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, related_name='citas')
+    fecha_inicio = models.DateTimeField()
+    fecha_fin = models.DateTimeField()
+    descripcion = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f'Cita con {self.paciente.nombre} el {self.fecha_inicio.strftime("%Y-%m-%d %H:%M")}'

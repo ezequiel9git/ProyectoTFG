@@ -3,8 +3,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
-from .models import Paciente, Sesion
-from .serializers import UserSerializer, PacienteSerializer, SesionSerializer
+from .models import Paciente, Sesion, Cita
+from .serializers import UserSerializer, PacienteSerializer, SesionSerializer, CitaSerializer
 
 
 # Token JWT personalizado con nombre de usuario
@@ -73,3 +73,24 @@ class SesionDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Sesion.objects.filter(paciente__terapeuta=self.request.user)
+
+
+# Vista para listar y crear citas
+class CitaListCreateView(generics.ListCreateAPIView):
+    serializer_class = CitaSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Cita.objects.filter(paciente__terapeuta=self.request.user)
+
+    def perform_create(self, serializer):
+        paciente = get_object_or_404(Paciente, id=self.request.data.get('paciente'), terapeuta=self.request.user)
+        serializer.save(paciente=paciente)
+
+# Vista para recuperar, actualizar o eliminar una cita específica
+class CitaDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = CitaSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Cita.objects.filter(paciente__terapeuta=self.request.user)

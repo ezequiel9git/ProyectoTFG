@@ -21,7 +21,7 @@ const Dashboard = () => {
       </div>
 
       <div className="row">
-        <div className="col-md-6 mb-3">
+        <div className="col-md-4 mb-3">
           <div className="card shadow rounded-4 p-4">
             <h4>Pacientes</h4>
             <p>Gestiona tu lista de pacientes y accede a sus sesiones individuales.</p>
@@ -31,12 +31,22 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="col-md-6 mb-3">
+        <div className="col-md-4 mb-3">
           <div className="card shadow rounded-4 p-4">
             <h4>Reportes</h4>
             <p>Consulta estadísticas relevantes de pacientes y sesiones.</p>
             <Link to="/reportes" className="btn btn-secondary">
               Ver Reportes
+            </Link>
+          </div>
+        </div>
+
+        <div className="col-md-4 mb-3">
+          <div className="card shadow rounded-4 p-4">
+            <h4>Agenda</h4>
+            <p>Visualiza y gestiona tus citas terapéuticas en el calendario.</p>
+            <Link to="/agenda" className="btn btn-success">
+              Ir a Agenda
             </Link>
           </div>
         </div>
@@ -46,4 +56,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-

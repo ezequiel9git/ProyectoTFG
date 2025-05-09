@@ -12,6 +12,8 @@ import SesionesPage from './pages/SesionesPage';
 import PacienteDetailPage from './pages/PacienteDetailPage';
 import SesionDetailPage from './pages/SesionDetailPage';
 import ReportesPage from './pages/ReportesPage';
+import AgendaPage from './pages/AgendaPage';
+
 
 function App() {
   return (
@@ -60,6 +62,14 @@ function App() {
             element={
               <PrivateRoute>
                 <ReportesPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/agenda"
+            element={
+              <PrivateRoute>
+                <AgendaPage />
               </PrivateRoute>
             }
           />
