@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 
 const LoginPage = () => {
@@ -43,36 +43,73 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="container mt-5" style={{ maxWidth: '400px' }}>
-      <h2>Iniciar Sesión</h2>
-      {error && <div className="alert alert-danger">{error}</div>}
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label>Usuario</label>
-          <input
-            type="text"
-            name="username"
-            className="form-control"
-            value={formData.username}
-            onChange={handleChange}
-            required
+    <div
+      className="d-flex align-items-center justify-content-center"
+      style={{
+        backgroundImage: 'url("/Fondo1.png")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        minHeight: '100vh',
+      }}
+    >
+      <div
+        className="bg-white bg-opacity-75 p-5 rounded-4 shadow-lg"
+        style={{ maxWidth: '500px', width: '100%' }}
+      >
+        <div className="text-center mb-4">
+          <img
+            src="/Logo9.png"
+            alt="Logo de la aplicación"
+            style={{ width: '120px', height: 'auto' }}
+            className="mb-3"
           />
+          <p className="text-secondary">
+            Accede a tu cuenta para gestionar tus pacientes, sesiones, agenda y más.
+          </p>
         </div>
-        <div className="mb-3">
-          <label>Contraseña</label>
-          <input
-            type="password"
-            name="password"
-            className="form-control"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
+
+        {error && <div className="alert alert-danger">{error}</div>}
+
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label className="form-label">Usuario</label>
+            <input
+              type="text"
+              name="username"
+              className="form-control"
+              value={formData.username}
+              onChange={handleChange}
+              required
+              placeholder="Introduce tu nombre de usuario"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="form-label">Contraseña</label>
+            <input
+              type="password"
+              name="password"
+              className="form-control"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              placeholder="Introduce tu contraseña"
+            />
+          </div>
+          <button type="submit" className="btn btn-primary w-100">
+            Iniciar Sesión
+          </button>
+        </form>
+
+        <div className="text-center mt-3">
+          <p className="mb-0">
+            ¿No tienes una cuenta?{' '}
+            <Link to="/register" className="text-primary fw-bold">
+              Regístrate aquí
+            </Link>
+          </p>
         </div>
-        <button className="btn btn-primary w-100" type="submit">
-          Entrar
-        </button>
-      </form>
+      </div>
     </div>
   );
 };

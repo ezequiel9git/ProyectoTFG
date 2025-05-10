@@ -15,10 +15,8 @@ const AgendaPage = () => {
   const { authTokens } = useContext(AuthContext);
   const [citas, setCitas] = useState([]);
   const [pacientes, setPacientes] = useState([]);
-
   const [modalEditOpen, setModalEditOpen] = useState(false);
   const [modalCreateOpen, setModalCreateOpen] = useState(false);
-
   const [citaSeleccionada, setCitaSeleccionada] = useState(null);
   const [nuevaCita, setNuevaCita] = useState({
     paciente: '',
@@ -151,41 +149,51 @@ const AgendaPage = () => {
   };
 
   return (
-    <div className="container mt-4">
+    <div style={{ position: 'relative', height: '100vh', overflow: 'auto' }}>
+      <div
+        style={{
+          backgroundImage: "url('/Fondo1.png')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: -1,
+        }}
+      />
       <ToastContainer />
-      <h2>Agenda del Terapeuta</h2>
-      <p className="mb-3">Administra tus citas programadas.</p>
-      <div className="card p-3 shadow-sm">
-        <FullCalendar
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          initialView="dayGridMonth"
-          headerToolbar={{
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay',
-          }}
-          events={citas}
-          dateClick={handleDateClick}
-          eventClick={handleEventClick}
-          height="auto"
-        />
+      <div className="container rounded shadow-lg bg-white p-4">
+        <div className="d-flex align-items-center mb-4">
+          <img src= "url('/PacientesLogo.png')" alt="Agenda" style={{ height: '40px', marginRight: '10px' }} />
+          <h2 className="mb-0">Agenda del Terapeuta</h2>
+        </div>
+        <p className="text-muted mb-3">Administra tus citas programadas con facilidad.</p>
+
+        <div className="card p-3 border-0 shadow-sm">
+          <FullCalendar
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+            initialView="dayGridMonth"
+            headerToolbar={{
+              left: 'prev,next today',
+              center: 'title',
+              right: 'dayGridMonth,timeGridWeek,timeGridDay',
+            }}
+            events={citas}
+            dateClick={handleDateClick}
+            eventClick={handleEventClick}
+            height="auto"
+          />
+        </div>
       </div>
 
-      {/* Modal Crear Cita */}
-      <Modal
-        isOpen={modalCreateOpen}
-        onRequestClose={() => setModalCreateOpen(false)}
-        style={modalStyles}
-      >
+      {/* Modales: Crear y Editar */}
+      <Modal isOpen={modalCreateOpen} onRequestClose={() => setModalCreateOpen(false)} style={modalStyles}>
         <h5>Nueva Cita</h5>
         <div className="mb-2">
           <label>Paciente</label>
-          <select
-            className="form-control"
-            name="paciente"
-            value={nuevaCita.paciente}
-            onChange={handleChangeNuevaCita}
-          >
+          <select className="form-control" name="paciente" value={nuevaCita.paciente} onChange={handleChangeNuevaCita}>
             <option value="">Seleccione un paciente</option>
             {pacientes.map(p => (
               <option key={p.id} value={p.id}>{p.nombre}</option>
@@ -194,32 +202,15 @@ const AgendaPage = () => {
         </div>
         <div className="mb-2">
           <label>Descripción</label>
-          <textarea
-            className="form-control"
-            name="descripcion"
-            value={nuevaCita.descripcion}
-            onChange={handleChangeNuevaCita}
-          />
+          <textarea className="form-control" name="descripcion" value={nuevaCita.descripcion} onChange={handleChangeNuevaCita} />
         </div>
         <div className="mb-2">
           <label>Fecha inicio</label>
-          <input
-            type="datetime-local"
-            name="fecha_inicio"
-            className="form-control"
-            value={nuevaCita.fecha_inicio}
-            onChange={handleChangeNuevaCita}
-          />
+          <input type="datetime-local" name="fecha_inicio" className="form-control" value={nuevaCita.fecha_inicio} onChange={handleChangeNuevaCita} />
         </div>
         <div className="mb-2">
           <label>Fecha fin</label>
-          <input
-            type="datetime-local"
-            name="fecha_fin"
-            className="form-control"
-            value={nuevaCita.fecha_fin}
-            onChange={handleChangeNuevaCita}
-          />
+          <input type="datetime-local" name="fecha_fin" className="form-control" value={nuevaCita.fecha_fin} onChange={handleChangeNuevaCita} />
         </div>
         <div className="d-flex justify-content-between mt-4">
           <button className="btn btn-success" onClick={handleCrearCita}>Crear Cita</button>
@@ -227,12 +218,7 @@ const AgendaPage = () => {
         </div>
       </Modal>
 
-      {/* Modal Editar Cita */}
-      <Modal
-        isOpen={modalEditOpen}
-        onRequestClose={() => setModalEditOpen(false)}
-        style={modalStyles}
-      >
+      <Modal isOpen={modalEditOpen} onRequestClose={() => setModalEditOpen(false)} style={modalStyles}>
         <h5 className="mb-3">Editar Cita</h5>
         {citaSeleccionada && (
           <>

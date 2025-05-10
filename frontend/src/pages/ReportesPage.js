@@ -47,42 +47,57 @@ const ReportesPage = () => {
   }, [authTokens]);
 
   return (
-    <div className="container mt-5">
-      <h2>Estadísticas de Pacientes</h2>
-      <p className="mb-4">Resumen de actividad por paciente.</p>
+    <div style={{ position: 'relative', height: '100vh', overflow: 'auto' }}>
+      <div
+        style={{
+          backgroundImage: "url('/Fondo1.png')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: -1,
+        }}
+      />
+      <div className="container mt-5 p-4 rounded" style={{ backgroundColor: 'rgba(255,255,255,0.95)' }}>
+        <h2>Estadísticas de Pacientes</h2>
+        <p className="mb-4">Resumen de actividad por paciente.</p>
 
-      {loading ? (
-        <p>Cargando reportes...</p>
-      ) : (
-        <div className="table-responsive">
-          <table className="table table-bordered table-striped">
-            <thead className="table-light">
-              <tr>
-                <th>Nombre del Paciente</th>
-                <th>Nº de Sesiones</th>
-                <th>Duración Total (min)</th>
-                <th>Duración Promedio (min)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {reportes.length === 0 ? (
+        {loading ? (
+          <p>Cargando reportes...</p>
+        ) : (
+          <div className="table-responsive">
+            <table className="table table-bordered table-striped">
+              <thead className="table-light">
                 <tr>
-                  <td colSpan="4" className="text-center">No hay datos disponibles.</td>
+                  <th>Nombre del Paciente</th>
+                  <th>Nº de Sesiones</th>
+                  <th>Duración Total (min)</th>
+                  <th>Duración Promedio (min)</th>
                 </tr>
-              ) : (
-                reportes.map((r, index) => (
-                  <tr key={index}>
-                    <td>{r.nombre}</td>
-                    <td>{r.totalSesiones}</td>
-                    <td>{r.duracionTotal}</td>
-                    <td>{r.duracionPromedio}</td>
+              </thead>
+              <tbody>
+                {reportes.length === 0 ? (
+                  <tr>
+                    <td colSpan="4" className="text-center">No hay datos disponibles.</td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
+                ) : (
+                  reportes.map((r, index) => (
+                    <tr key={index}>
+                      <td>{r.nombre}</td>
+                      <td>{r.totalSesiones}</td>
+                      <td>{r.duracionTotal}</td>
+                      <td>{r.duracionPromedio}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

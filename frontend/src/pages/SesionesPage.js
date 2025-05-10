@@ -10,6 +10,7 @@ const SesionesPage = () => {
   const [sesiones, setSesiones] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sesionEditada, setSesionEditada] = useState(null);
+  const [activeTab, setActiveTab] = useState('formulario');
 
   useEffect(() => {
     if (pacienteId) {
@@ -31,9 +32,11 @@ const SesionesPage = () => {
 
   const handleSesionCreada = (nuevaSesion) => {
     setSesiones((prev) => {
-      const actualizadas = prev.filter(s => s.id !== nuevaSesion.id); // elimina si es edición
+      const actualizadas = prev.filter(s => s.id !== nuevaSesion.id);
       return [nuevaSesion, ...actualizadas].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
     });
+    setSesionEditada(null);
+    setActiveTab('lista');
   };
 
   const handleEliminarSesion = async (id) => {
@@ -52,6 +55,7 @@ const SesionesPage = () => {
 
   const handleEditarSesion = (sesion) => {
     setSesionEditada(sesion);
+    setActiveTab('formulario');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -60,58 +64,111 @@ const SesionesPage = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <h2>Sesiones de Terapia</h2>
-      <p className="mb-4">Registra o gestiona sesiones para uno de tus pacientes.</p>
+    <div style={{ position: 'relative', height: '100vh', overflow: 'auto' }}>
+      <div
+        style={{
+          backgroundImage: "url('/Fondo1.png')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: -1,
+        }}
+      />
+      <div className="container" style={{ maxWidth: '900px' }}>
+        <div className="card p-4 shadow rounded-4" style={{ backgroundColor: '#ffffff' }}>
+          <h2 className="mb-4 text-center">Sesiones de Terapia</h2>
+          <p className="text-center mb-4">
+            Registra nuevas sesiones o gestiona las ya existentes para tus pacientes.
+          </p>
 
-      {pacienteId ? (
-        <>
-          <SesionForm
-            pacienteId={pacienteId}
-            onSesionCreada={handleSesionCreada}
-            sesionEditada={sesionEditada}
-            onFinalizarEdicion={cancelarEdicion}
-          />
+          <ul className="nav nav-tabs mb-4 justify-content-center">
+            <li className="nav-item">
+              <button
+                className={`nav-link ${activeTab === 'formulario' ? 'active' : ''}`}
+                onClick={() => setActiveTab('formulario')}
+              >
+                <img src="/AgregarSesionesLogo.png" alt="Icono Formulario" style={{ width: '20px', marginRight: '8px' }} />
+                Registrar sesión
+              </button>
+            </li>
+            <li className="nav-item">
+              <button
+                className={`nav-link ${activeTab === 'lista' ? 'active' : ''}`}
+                onClick={() => setActiveTab('lista')}
+              >
+                <img src="/ListaSesionesLogo.png" alt="Icono Lista" style={{ width: '20px', marginRight: '8px' }} />
+                Lista de sesiones
+              </button>
+            </li>
+          </ul>
 
-          <hr className="my-4" />
-          <h4>Sesiones registradas</h4>
+          {pacienteId ? (
+            <>
+              {activeTab === 'formulario' && (
+                <SesionForm
+                  pacienteId={pacienteId}
+                  onSesionCreada={handleSesionCreada}
+                  sesionEditada={sesionEditada}
+                  onFinalizarEdicion={cancelarEdicion}
+                />
+              )}
 
-          {loading ? (
-            <p>Cargando sesiones...</p>
-          ) : sesiones.length === 0 ? (
-            <p>No hay sesiones registradas.</p>
+              {activeTab === 'lista' && (
+                <>
+                  {loading ? (
+                    <p>Cargando sesiones...</p>
+                  ) : sesiones.length === 0 ? (
+                    <p>No hay sesiones registradas.</p>
+                  ) : (
+                    <ul className="list-group">
+                      {sesiones.map((sesion) => (
+                        <li key={sesion.id} className="list-group-item">
+                          <div className="d-flex justify-content-between align-items-center">
+                            <div>
+                              <strong>Fecha:</strong> {sesion.fecha}<br />
+                              <strong>Duración:</strong> {sesion.duracion} min<br />
+                              <strong>Evaluación:</strong> {sesion.evaluacion || 'N/A'}<br />
+                              <strong>Seguimiento:</strong> {sesion.seguimiento || 'N/A'}
+                            </div>
+                            <div>
+                              <Link
+                                to={`/sesiones/${sesion.id}`}
+                                className="btn btn-sm btn-outline-info me-2"
+                              >
+                                Ver detalles
+                              </Link>
+                              <button
+                                className="btn btn-sm btn-outline-primary me-2"
+                                onClick={() => handleEditarSesion(sesion)}
+                              >
+                                Editar
+                              </button>
+                              <button
+                                className="btn btn-sm btn-outline-danger"
+                                onClick={() => handleEliminarSesion(sesion.id)}
+                              >
+                                Eliminar
+                              </button>
+                            </div>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </>
+              )}
+            </>
           ) : (
-            <ul className="list-group">
-              {sesiones.map((sesion) => (
-                <li key={sesion.id} className="list-group-item">
-                  <div className="d-flex justify-content-between align-items-center">
-                    <div>
-                      <strong>Fecha:</strong> {sesion.fecha}<br />
-                      <strong>Duración:</strong> {sesion.duracion} min<br />
-                      <strong>Evaluación:</strong> {sesion.evaluacion || 'N/A'}<br />
-                      <strong>Seguimiento:</strong> {sesion.seguimiento || 'N/A'}
-                    </div>
-                    <div>
-                    <Link to={`/sesiones/${sesion.id}`} className="btn btn-sm btn-outline-info me-2">
-                      Ver detalles
-                    </Link>
-                      <button className="btn btn-sm btn-outline-primary me-2" onClick={() => handleEditarSesion(sesion)}>
-                        Editar
-                      </button>
-                      <button className="btn btn-sm btn-outline-danger" onClick={() => handleEliminarSesion(sesion.id)}>
-                        Eliminar
-                      </button>
-                    </div>
-
-                  </div>
-                </li>
-              ))}
-            </ul>
+            <div className="alert alert-warning text-center">
+              No se pudo encontrar el ID del paciente.
+            </div>
           )}
-        </>
-      ) : (
-        <div className="alert alert-warning">No se pudo encontrar el ID del paciente.</div>
-      )}
+        </div>
+      </div>
     </div>
   );
 };
