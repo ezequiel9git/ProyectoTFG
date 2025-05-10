@@ -61,9 +61,13 @@ const ReportesPage = () => {
           zIndex: -1,
         }}
       />
-      <div className="container mt-5 p-4 rounded" style={{ backgroundColor: 'rgba(255,255,255,0.95)' }}>
-        <h2>Estadísticas de Pacientes</h2>
-        <p className="mb-4">Resumen de actividad por paciente.</p>
+      <div className="card p-4 shadow rounded-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
+      <div className="d-flex align-items-center mb-4">
+        <img src="/LogoReportes.png" alt="Icono de estadísticas" className="mx-auto" style={{ width: '125px', height: '125px' }} />
+          <div className="card-body">
+            <p style={{ fontStyle: "italic", textAlign: "center" }}>Aquí puedes consultar estadísticas útiles.</p>
+          </div>
+      </div>
 
         {loading ? (
           <p>Cargando reportes...</p>

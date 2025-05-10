@@ -58,11 +58,11 @@ const Dashboard = () => {
             <div className="card h-100 text-center shadow rounded-4 p-3">
               <img src="/LogoReportes.png" alt="Reportes" className="mx-auto" style={{ width: '80px', height: '80px' }} />
               <div className="card-body">
-                <h4 className="card-title text-secondary">Reportes</h4>
+                <h4 className="card-title text-success">Estadísticas</h4>
                 <p className="card-text">
                   Consulta estadísticas relevantes de pacientes y sesiones.
                 </p>
-                <Link to="/reportes" className="btn btn-secondary">
+                <Link to="/reportes" className="btn btn-primary">
                   Ver Reportes
                 </Link>
               </div>
@@ -78,7 +78,7 @@ const Dashboard = () => {
                 <p className="card-text">
                   Visualiza y gestiona tus citas terapéuticas en el calendario.
                 </p>
-                <Link to="/agenda" className="btn btn-success">
+                <Link to="/agenda" className="btn btn-primary">
                   Ir a Agenda
                 </Link>
               </div>

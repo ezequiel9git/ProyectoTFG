@@ -81,14 +81,20 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
   };
 
   return (
-    <div className="card p-4 mt-3">
+    <div className="card p-4 mt-1">
+      <div className="d-flex align-items-center mb-4">
+        <img src="/AgregarPacientesLogo.png" alt="Icono de agregar pacientes" className="mx-auto" style={{ width: '153px', height: '102px' }} />
+          <div className="card-body">
+            <p style={{ fontStyle: "italic", textAlign: "center" }}>En este panel puedes agregar un nuevo paciente al registro.</p>
+          </div>
+        </div>  
       <h4>{pacienteEditado ? 'Editar Paciente' : 'Agregar Paciente'}</h4>
       {error && <div className="alert alert-danger">{error}</div>}
       {success && <div className="alert alert-success">{success}</div>}
 
       <form onSubmit={handleSubmit}>
         <div className="mb-2">
-          <label>Nombre</label>
+          <h6>Nombre</h6>
           <input
             type="text"
             name="nombre"
@@ -99,7 +105,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
           />
         </div>
         <div className="mb-2">
-          <label>Edad</label>
+          <h6>Edad</h6>
           <input
             type="number"
             name="edad"
@@ -110,7 +116,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
           />
         </div>
         <div className="mb-2">
-          <label>Teléfono</label>
+          <h6>Teléfono de contacto</h6>
           <input
             type="text"
             name="telefono"
@@ -121,7 +127,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
           />
         </div>
         <div className="mb-2">
-          <label>Dirección</label>
+          <h6>Dirección</h6>
           <textarea
             name="direccion"
             className="form-control"
@@ -131,7 +137,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
           />
         </div>
         <div className="mb-2">
-          <label>Asunto</label>
+          <h6>Asunto</h6>
           <input
             type="text"
             name="asunto"
@@ -141,7 +147,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
           />
         </div>
         <div className="mb-2">
-          <label>Medicación</label>
+          <h6>Tratamiento médico</h6>
           <textarea
             name="medicacion"
             className="form-control"
@@ -150,7 +156,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
           />
         </div>
         <div className="mb-3">
-          <label>Prioridad de seguimiento</label>
+          <h6>Prioridad de seguimiento</h6>
           <select
             name="prioridad_seguimiento"
             className="form-select"

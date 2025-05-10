@@ -152,7 +152,7 @@ const AgendaPage = () => {
     <div style={{ position: 'relative', height: '100vh', overflow: 'auto' }}>
       <div
         style={{
-          backgroundImage: "url('/Fondo1.png')",
+          backgroundImage: "url('/Fondo5.png')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           position: 'fixed',
@@ -164,12 +164,15 @@ const AgendaPage = () => {
         }}
       />
       <ToastContainer />
-      <div className="container rounded shadow-lg bg-white p-4">
-        <div className="d-flex align-items-center mb-4">
-          <img src= "url('/PacientesLogo.png')" alt="Agenda" style={{ height: '40px', marginRight: '10px' }} />
-          <h2 className="mb-0">Agenda del Terapeuta</h2>
-        </div>
-        <p className="text-muted mb-3">Administra tus citas programadas con facilidad.</p>
+      <div className="card p-4 shadow rounded-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
+      <div className="d-flex align-items-center mb-4">
+        <img src="/Logo9.png" alt="Icono de agenda" className="mx-auto" style={{ width: '125px', height: '125px' }} />
+          <div style={{ textAlign: "center" }} className="card-body">
+            <h2 className="card-title text-primary">Agenda</h2><br></br>
+            <p style={{ fontStyle: "italic" }}>Administra tus citas programadas con facilidad.</p>
+            <p style={{ fontStyle: "italic" }}>Pulsa sobre una casilla del calendario para agregar un cita, o sobre una cita para operar con ella.</p>
+          </div>
+      </div>
 
         <div className="card p-3 border-0 shadow-sm">
           <FullCalendar

@@ -77,43 +77,49 @@ const SesionForm = ({ pacienteId, onSesionCreada, sesionEditada, onFinalizarEdic
       console.error(err);
     }
   };
-
+ 
   return (
-    <div className="card p-4 mt-4">
+     <div className="card p-4 mt-1">
+      <div className="d-flex align-items-center mb-4">
+        <img src="/AgregarSesionesLogo.png" alt="Icono de agregar sesiones" className="mx-auto" style={{ width: '125px', height: '125px' }} />
+          <div className="card-body">
+            <p style={{ fontStyle: "italic", textAlign: "center" }}>En este panel puedes agregar una nueva sesión para el paciente seleccionado.</p>
+          </div>
+        </div>  
       <h4>{modoEdicion ? 'Editar sesión' : 'Registrar nueva sesión'}</h4>
       {error && <div className="alert alert-danger">{error}</div>}
 
       <form onSubmit={handleSubmit}>
         <div className="mb-2">
-          <label>Fecha</label>
+          <h6>Fecha</h6>
           <input type="date" name="fecha" className="form-control" value={formData.fecha} onChange={handleChange} required />
         </div>
         <div className="mb-2">
-          <label>Duración (minutos)</label>
+          <h6>Duración (minutos)</h6>
           <input type="number" name="duracion" className="form-control" value={formData.duracion} onChange={handleChange} required />
         </div>
         <div className="mb-2">
-          <label>Estado emocional</label>
+          <h6>Estado emocional</h6>
           <textarea name="estado_emocional" className="form-control" value={formData.estado_emocional} onChange={handleChange} />
         </div>
         <div className="mb-2">
-          <label>Evaluación de sesión</label>
+          <h6>Evaluación de sesión</h6>
           <textarea name="evaluacion" className="form-control" value={formData.evaluacion} onChange={handleChange} />
         </div>
         <div className="mb-2">
-          <label>Seguimiento de hábitos</label>
+          <h6>Seguimiento de hábitos</h6>
           <textarea name="seguimiento_habitos" className="form-control" value={formData.seguimiento_habitos} onChange={handleChange} />
         </div>
         <div className="mb-2">
-          <label>Actividades</label>
+          <h6>Actividades asignadas</h6>
           <textarea name="actividades" className="form-control" value={formData.actividades} onChange={handleChange} />
         </div>
         <div className="mb-2">
-          <label>Próxima sesión</label>
+          <h6>Notas para la próxima sesión</h6>
           <textarea name="proxima_sesion" className="form-control" value={formData.proxima_sesion} onChange={handleChange} />
         </div>
         <div className="mb-2">
-          <label>Seguimiento</label>
+          <h6>Prioridad de Seguimiento</h6>
           <input type="text" name="seguimiento" className="form-control" value={formData.seguimiento} onChange={handleChange} />
         </div>
 

@@ -13,3 +13,40 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+
+/* Botones de los CRUD*/
+.btn-agregar {
+  background-color: #015b8f;
+  color: #ffffff;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-agregar:hover {
+  background-color: #0c013f;
+  color: #ffffff;
+}
+
+.btn-editar {
+  background-color: #025e02;
+  color: #ffffff;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-editar:hover {
+  background-color: #013f01;
+  color: #ffffff;
+}
+
+.btn-eliminar {
+  background-color: #c02004;
+  color: #ffffff;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-eliminar:hover {
+  background-color: rgb(133, 3, 3);
+  color: #ffffff;
+}

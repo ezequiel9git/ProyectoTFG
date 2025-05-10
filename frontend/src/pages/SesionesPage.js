@@ -76,15 +76,17 @@ const SesionesPage = () => {
           width: '100%',
           height: '100%',
           zIndex: -1,
-        }}
+        }} 
       />
-      <div className="container" style={{ maxWidth: '900px' }}>
-        <div className="card p-4 shadow rounded-4" style={{ backgroundColor: '#ffffff' }}>
-          <h2 className="mb-4 text-center">Sesiones de Terapia</h2>
-          <p className="text-center mb-4">
-            Registra nuevas sesiones o gestiona las ya existentes para tus pacientes.
-          </p>
-
+      <div className="card p-4 shadow rounded-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
+      <div className="d-flex align-items-center mb-4">
+        <img src="/ListaSesionesLogo.png" alt="Icono de sesiones" className="mx-auto" style={{ width: '125px', height: '125px' }} />
+          <div style={{ textAlign: "center" }} className="card-body">
+            <h2 className="card-title text-primary">Archivo de sesiones</h2><br></br>
+            <p style={{ fontStyle: "italic" }}>Consulta los informes de evaluación del paciente y crea nuevos.</p>
+          </div>
+      </div>
+      <div>
           <ul className="nav nav-tabs mb-4 justify-content-center">
             <li className="nav-item">
               <button
@@ -129,10 +131,12 @@ const SesionesPage = () => {
                         <li key={sesion.id} className="list-group-item">
                           <div className="d-flex justify-content-between align-items-center">
                             <div>
-                              <strong>Fecha:</strong> {sesion.fecha}<br />
-                              <strong>Duración:</strong> {sesion.duracion} min<br />
-                              <strong>Evaluación:</strong> {sesion.evaluacion || 'N/A'}<br />
-                              <strong>Seguimiento:</strong> {sesion.seguimiento || 'N/A'}
+        <div className="mb-3">
+          <h5>Fecha:</h5> {sesion.fecha}
+        </div>
+        <div className="mb-3">
+          <h5>Evaluación de la sesión:</h5> {sesion.evaluacion || 'N/A'}
+        </div>
                             </div>
                             <div>
                               <Link

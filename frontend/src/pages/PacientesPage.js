@@ -23,7 +23,7 @@ const PacientesPage = () => {
     <div style={{ position: 'relative', height: '100vh', overflow: 'auto' }}>
       <div
         style={{
-          backgroundImage: "url('/Fondo1.png')",
+          backgroundImage: "url('/Fondo8.png')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           position: 'fixed',
@@ -54,7 +54,7 @@ const PacientesPage = () => {
               onClick={() => setActiveTab('formulario')}
             >
               <img src="/AgregarPacientesLogo.png" alt="Agregar" style={{ height: '20px', marginRight: '6px' }} />
-              Agregar/Editar Paciente
+              Agregar nuevo paciente
             </button>
           </li>
         </ul>
