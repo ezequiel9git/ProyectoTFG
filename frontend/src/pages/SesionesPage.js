@@ -77,26 +77,22 @@ const SesionesPage = () => {
           height: '100%',
           zIndex: -1,
         }} 
-      />
-      <div className="card p-4 shadow rounded-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
-      <div className="d-flex align-items-center mb-4">
+      /> 
+      <div className="card p-1 shadow rounded-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
+      
+      
+      <div className="d-flex align-items-center mb-1">
         <img src="/ListaSesionesLogo.png" alt="Icono de sesiones" className="mx-auto" style={{ width: '125px', height: '125px' }} />
           <div style={{ textAlign: "center" }} className="card-body">
             <h2 className="card-title text-primary">Archivo de sesiones</h2><br></br>
-            <p style={{ fontStyle: "italic" }}>Consulta los informes de evaluación del paciente y crea nuevos.</p>
+            <p className="text-muted fst-italic">Consulta los informes de evaluación del paciente y crea nuevos.</p>
           </div>
       </div>
+
+
       <div>
           <ul className="nav nav-tabs mb-4 justify-content-center">
-            <li className="nav-item">
-              <button
-                className={`nav-link ${activeTab === 'formulario' ? 'active' : ''}`}
-                onClick={() => setActiveTab('formulario')}
-              >
-                <img src="/AgregarSesionesLogo.png" alt="Icono Formulario" style={{ width: '20px', marginRight: '8px' }} />
-                Registrar sesión
-              </button>
-            </li>
+
             <li className="nav-item">
               <button
                 className={`nav-link ${activeTab === 'lista' ? 'active' : ''}`}
@@ -106,18 +102,21 @@ const SesionesPage = () => {
                 Lista de sesiones
               </button>
             </li>
+
+            <li className="nav-item">
+              <button
+                className={`nav-link ${activeTab === 'formulario' ? 'active' : ''}`}
+                onClick={() => setActiveTab('formulario')}
+              >
+                <img src="/AgregarSesionesLogo.png" alt="Icono Formulario" style={{ width: '20px', marginRight: '8px' }} />
+                Registrar sesión
+              </button>
+            </li>
+
           </ul>
 
           {pacienteId ? (
             <>
-              {activeTab === 'formulario' && (
-                <SesionForm
-                  pacienteId={pacienteId}
-                  onSesionCreada={handleSesionCreada}
-                  sesionEditada={sesionEditada}
-                  onFinalizarEdicion={cancelarEdicion}
-                />
-              )}
 
               {activeTab === 'lista' && (
                 <>
@@ -131,12 +130,12 @@ const SesionesPage = () => {
                         <li key={sesion.id} className="list-group-item">
                           <div className="d-flex justify-content-between align-items-center">
                             <div>
-        <div className="mb-3">
-          <h5>Fecha:</h5> {sesion.fecha}
-        </div>
-        <div className="mb-3">
-          <h5>Evaluación de la sesión:</h5> {sesion.evaluacion || 'N/A'}
-        </div>
+                              <div className="mb-3">
+                                <h5>Fecha:</h5> {sesion.fecha}
+                              </div>
+                              <div className="mb-3">
+                                <h5>Evaluación de la sesión:</h5> {sesion.evaluacion || 'N/A'}
+                              </div>
                             </div>
                             <div>
                               <Link
@@ -165,6 +164,18 @@ const SesionesPage = () => {
                   )}
                 </>
               )}
+
+              {activeTab === 'formulario' && (
+                <SesionForm
+                  pacienteId={pacienteId}
+                  onSesionCreada={handleSesionCreada}
+                  sesionEditada={sesionEditada}
+                  onFinalizarEdicion={cancelarEdicion}
+                />
+              )}
+
+
+
             </>
           ) : (
             <div className="alert alert-warning text-center">

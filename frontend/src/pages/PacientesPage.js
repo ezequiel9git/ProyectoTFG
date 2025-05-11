@@ -36,9 +36,16 @@ const PacientesPage = () => {
       />
 
       <div className="card p-4 shadow rounded-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
-        <h2 className="mb-4 text-grey">Gestión de Pacientes</h2>
+        
+      <div className="d-flex align-items-center mb-1">
+        <img src="/ListaPacientesLogo.png" alt="Icono de pacientes" className="mx-auto" style={{ width: '125px', height: '125px' }} />
+          <div style={{ textAlign: "center" }} className="card-body">
+            <h2 className="card-title text-primary">Registro de pacientes</h2><br></br>
+            <p className="text-muted fst-italic">Consulta la información de tus pacientes y registra nuevos.</p>
+          </div>
+      </div>
 
-        <ul className="nav nav-tabs mb-4">
+        <ul className="nav nav-tabs mb-4 justify-content-center">
           <li className="nav-item">
             <button
               className={`nav-link ${activeTab === 'lista' ? 'active' : ''}`}

@@ -48,7 +48,7 @@ const SesionDetailPage = () => {
         <img src="/ListaSesionesLogo.png" alt="Icono de sesiones" className="mx-auto" style={{ width: '125px', height: '125px' }} />
           <div style={{ textAlign: "center" }} className="card-body">
             <h2 className="card-title text-primary">Informe de sesión</h2><br></br>
-            <p style={{ fontStyle: "italic" }}>Consulta el informe de evaluación completo del paciente.</p>
+            <p className="text-muted fst-italic">Consulta el informe de evaluación completo del paciente.</p>
           </div>
       </div>
 
