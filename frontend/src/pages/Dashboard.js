@@ -29,12 +29,16 @@ const Dashboard = () => {
     
     <div className="container py-5">
       <div className="container bg-white bg-opacity-75 rounded-4 shadow p-5">
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <h2 className="fw-bold text-primary">Bienvenido, {user && user.username}</h2>
+
+        <div className="d-flex align-items-center mb-4">
+          <img src="/LogoElysia.png" alt="Icono de la aplicación" className="mx-auto" style={{ width: '200px', height: '200px' }} />
+          <div className="card-body text-center">
+            <h2 className="card-title text-primary">Bienvenido, {user && user.username}</h2>
+            <p></p>
+            <p className="mb-5 fs-5 fst-italic">Este es tu panel principal. <br></br>
+            Gestiona pacientes y sesiones, consulta estadísticas y administra tu agenda de citas.</p>
+          </div>
         </div>
-        <p className="mb-5 fs-5">
-          Este es tu panel principal. Desde aquí puedes gestionar pacientes, consultar reportes y administrar tu agenda de citas.
-        </p>
 
         <div className="row g-4">
           {/* Pacientes */}
@@ -42,12 +46,12 @@ const Dashboard = () => {
             <div className="card h-100 text-center shadow rounded-4 p-3">
               <img src="/LogoPacientes.png" alt="Pacientes" className="mx-auto" style={{ width: '80px', height: '80px' }} />
               <div className="card-body">
-                <h4 className="card-title text-primary">Pacientes</h4>
+                <h4 className="card-title text-success">Pacientes y sesiones</h4>
                 <p className="card-text">
                   Gestiona tu lista de pacientes y accede a sus sesiones individuales.
                 </p>
                 <Link to="/pacientes" className="btn btn-primary">
-                  Ir a Pacientes
+                  Ir a Pacientes y sesiones
                 </Link>
               </div>
             </div>
@@ -63,7 +67,7 @@ const Dashboard = () => {
                   Consulta estadísticas relevantes de pacientes y sesiones.
                 </p>
                 <Link to="/reportes" className="btn btn-primary">
-                  Ver Reportes
+                  Consultar estadísticas
                 </Link>
               </div>
             </div>
@@ -79,7 +83,7 @@ const Dashboard = () => {
                   Visualiza y gestiona tus citas terapéuticas en el calendario.
                 </p>
                 <Link to="/agenda" className="btn btn-primary">
-                  Ir a Agenda
+                  Gestionar agenda
                 </Link>
               </div>
             </div>

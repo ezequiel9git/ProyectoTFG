@@ -90,7 +90,7 @@ const CitaFormModal = ({ show, onHide, onSubmit, pacientes, fechaInicial }) => {
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={onHide}>Cancelar</Button>
+          <Button variant="danger" onClick={onHide}>Cancelar</Button>
           <Button type="submit" variant="primary">Guardar</Button>
         </Modal.Footer>
       </Form>

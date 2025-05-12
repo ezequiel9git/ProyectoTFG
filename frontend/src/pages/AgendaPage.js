@@ -167,10 +167,10 @@ const AgendaPage = () => {
       <div className="card p-4 shadow rounded-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
       <div className="d-flex align-items-center mb-4">
         <img src="/Logo9.png" alt="Icono de agenda" className="mx-auto" style={{ width: '125px', height: '125px' }} />
-          <div style={{ textAlign: "center" }} className="card-body">
+          <div className="card-body text-center">
             <h2 className="card-title text-primary">Agenda</h2><br></br>
-            <p style={{ fontStyle: "italic" }}>Administra tus citas programadas con facilidad.</p>
-            <p style={{ fontStyle: "italic" }}>Pulsa sobre una casilla del calendario para agregar un cita, o sobre una cita para operar con ella.</p>
+            <p className="text-muted fst-italic">Administra tus citas programadas con facilidad.</p>
+            <p className="text-muted fst-italic">Pulsa sobre una casilla del calendario para agregar un cita, o sobre una cita para operar con ella.</p>
           </div>
       </div>
 

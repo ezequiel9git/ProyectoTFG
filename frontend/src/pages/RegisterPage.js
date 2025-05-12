@@ -56,9 +56,9 @@ const RegisterPage = () => {
       >
         <div className="text-center mb-4">
           <img
-            src="/Logo9.png"
+            src="/LogoElysia.png"
             alt="Logo de la aplicación"
-            style={{ width: '120px', height: 'auto' }}
+            style={{ width: '200px', height: 'auto' }}
             className="mb-3"
           />
           <p className="text-secondary">

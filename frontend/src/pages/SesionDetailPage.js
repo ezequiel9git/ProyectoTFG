@@ -79,7 +79,7 @@ const SesionDetailPage = () => {
         </div>
 
         <div className="text-end">
-          <Link to={`/pacientes/${sesion.paciente}/sesiones`} className="btn btn-sm px-3 shadow btn-agregar">
+          <Link to={`/pacientes/${sesion.paciente}/sesiones`} className="btn btn-primary">
             ← Volver a sesiones del paciente
           </Link>
         </div>

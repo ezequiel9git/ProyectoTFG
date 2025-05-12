@@ -82,11 +82,12 @@ const SesionForm = ({ pacienteId, onSesionCreada, sesionEditada, onFinalizarEdic
      <div className="card p-4 mt-1">
       <div className="d-flex align-items-center mb-4">
         <img src="/AgregarSesionesLogo.png" alt="Icono de agregar sesiones" className="mx-auto" style={{ width: '125px', height: '125px' }} />
-          <div className="card-body">
-            <p style={{ fontStyle: "italic", textAlign: "center" }}>En este panel puedes agregar una nueva sesión para el paciente seleccionado.</p>
+          <div className="card-body text-center">
+            <h4>{modoEdicion ? 'Editar sesión' : 'Registrar nueva sesión'}</h4>
+            <p className="text-muted fst-italic">En este panel puedes agregar una nueva sesión para el paciente seleccionado.</p>
           </div>
         </div>  
-      <h4>{modoEdicion ? 'Editar sesión' : 'Registrar nueva sesión'}</h4>
+      
       {error && <div className="alert alert-danger">{error}</div>}
 
       <form onSubmit={handleSubmit}>
@@ -100,27 +101,27 @@ const SesionForm = ({ pacienteId, onSesionCreada, sesionEditada, onFinalizarEdic
         </div>
         <div className="mb-2">
           <h6>Estado emocional</h6>
-          <textarea name="estado_emocional" className="form-control" value={formData.estado_emocional} onChange={handleChange} />
+          <textarea name="estado_emocional" className="form-control" placeholder="Estados de ánimo tanto general como en momentos puntuales de la sesión" value={formData.estado_emocional} onChange={handleChange} />
         </div>
         <div className="mb-2">
           <h6>Evaluación de sesión</h6>
-          <textarea name="evaluacion" className="form-control" value={formData.evaluacion} onChange={handleChange} />
+          <textarea name="evaluacion" className="form-control" placeholder="Descripción, resumen, conclusiones, ideas clave de la sesión" value={formData.evaluacion} onChange={handleChange} />
         </div>
         <div className="mb-2">
           <h6>Seguimiento de hábitos</h6>
-          <textarea name="seguimiento_habitos" className="form-control" value={formData.seguimiento_habitos} onChange={handleChange} />
+          <textarea name="seguimiento_habitos" className="form-control" placeholder="Seguimiento de sus rutinas (sueño, apetito...) " value={formData.seguimiento_habitos} onChange={handleChange} />
         </div>
         <div className="mb-2">
           <h6>Actividades asignadas</h6>
-          <textarea name="actividades" className="form-control" value={formData.actividades} onChange={handleChange} />
+          <textarea name="actividades" className="form-control" placeholder="Seguimiento de las tareas asignadas al paciente" value={formData.actividades} onChange={handleChange} />
         </div>
         <div className="mb-2">
           <h6>Notas para la próxima sesión</h6>
-          <textarea name="proxima_sesion" className="form-control" value={formData.proxima_sesion} onChange={handleChange} />
+          <textarea name="proxima_sesion" className="form-control" placeholder="Apuntes a considerar para el próximo encuentro" value={formData.proxima_sesion} onChange={handleChange} />
         </div>
         <div className="mb-2">
           <h6>Prioridad de Seguimiento</h6>
-          <input type="text" name="seguimiento" className="form-control" value={formData.seguimiento} onChange={handleChange} />
+          <input type="text" name="seguimiento" className="form-control" placeholder="Evaluación de modificaciones en la prioridad de seguimiento" value={formData.seguimiento} onChange={handleChange} />
         </div>
 
         <button type="submit" className="btn btn-primary">

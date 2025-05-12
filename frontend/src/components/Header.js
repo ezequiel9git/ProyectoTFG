@@ -21,21 +21,25 @@ const Header = () => {
     >
       <div className="container d-flex flex-wrap justify-content-between align-items-center py-3">
         <div className="d-flex align-items-center gap-3">
-          <img src="/Logo9.png" alt="Logo de la aplicación" height="40" />
+          <img src="/LogoElysia2.png" alt="Logo de la aplicación" height="40" />
           <h5 className="mb-0">Bienvenido, {user?.username}</h5>
         </div>
 
-        <nav className="d-flex align-items-center gap-3 mt-2 mt-md-0">
-          <Link to="/dashboard" className="text-white text-decoration-none fw-semibold">
+        <nav className="d-flex align-items-center gap-4 mt-2 mt-md-0">
+          <Link to="/dashboard" className="text-white text-decoration-none fw-semibold d-flex align-items-center gap-2">
+            <img src="/ListaPacientesLogo.png" alt="Dashboard" height="24" />
             Dashboard
           </Link>
-          <Link to="/pacientes" className="text-white text-decoration-none fw-semibold">
+          <Link to="/pacientes" className="text-white text-decoration-none fw-semibold d-flex align-items-center gap-2">
+            <img src="/LogoPacientes.png" alt="Pacientes" height="24" />
             Pacientes
           </Link>
-          <Link to="/reportes" className="text-white text-decoration-none fw-semibold">
-            Reportes
+          <Link to="/reportes" className="text-white text-decoration-none fw-semibold d-flex align-items-center gap-2">
+            <img src="/LogoReportes.png" alt="Estadísticas" height="24" />
+            Estadísticas
           </Link>
-          <Link to="/agenda" className="text-white text-decoration-none fw-semibold">
+          <Link to="/agenda" className="text-white text-decoration-none fw-semibold d-flex align-items-center gap-2">
+            <img src="/LogoAgenda.png" alt="Agenda" height="24" />
             Agenda
           </Link>
           <button
@@ -52,3 +56,4 @@ const Header = () => {
 };
 
 export default Header;
+

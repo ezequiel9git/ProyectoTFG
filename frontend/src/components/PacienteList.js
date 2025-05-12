@@ -100,17 +100,17 @@ const PacienteList = ({ onEditarPaciente, recargarTrigger }) => {
                     <td className="d-flex flex-wrap gap-2">
                       <Link
                         to={`/pacientes/${paciente.id}/sesiones`}
-                        className="btn btn-sm rounded-pill px-3 shadow btn-agregar"
+                        className="btn btn-sm  px-3 shadow btn-agregar"
                       > Gestionar sesiones
                       </Link>
                       <button
-                        className="btn btn-sm rounded-pill px-3 shadow btn-editar"
+                        className="btn btn-sm  px-3 shadow btn-editar"
                         onClick={() => onEditarPaciente(paciente)}
                       >
                         Editar
                       </button>
                       <button
-                        className="btn btn-sm rounded-pill px-3 shadow btn-eliminar"
+                        className="btn btn-sm  px-3 shadow btn-eliminar"
                         onClick={() => handleEliminar(paciente.id)}
                       >
                         Borrar

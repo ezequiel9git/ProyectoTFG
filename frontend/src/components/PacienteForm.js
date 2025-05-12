@@ -84,11 +84,12 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
     <div className="card p-4 mt-1">
       <div className="d-flex align-items-center mb-4">
         <img src="/AgregarPacientesLogo.png" alt="Icono de agregar pacientes" className="mx-auto" style={{ width: '153px', height: '102px' }} />
-          <div className="card-body">
-            <p style={{ fontStyle: "italic", textAlign: "center" }}>En este panel puedes agregar un nuevo paciente al registro.</p>
+          <div className="card-body text-center">
+            <h4>{pacienteEditado ? 'Editar Paciente' : 'Agregar Paciente'}</h4>
+            <p className="text-muted fst-italic">En este panel puedes agregar un nuevo paciente al registro.</p>
           </div>
-        </div>  
-      <h4>{pacienteEditado ? 'Editar Paciente' : 'Agregar Paciente'}</h4>
+        </div>
+      
       {error && <div className="alert alert-danger">{error}</div>}
       {success && <div className="alert alert-success">{success}</div>}
 
@@ -131,6 +132,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
           <textarea
             name="direccion"
             className="form-control"
+            placeholder="Datos del domicilio"
             value={formData.direccion}
             onChange={handleChange}
             required
@@ -142,6 +144,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
             type="text"
             name="asunto"
             className="form-control"
+            placeholder="Motivantes de la consulta (depresión, trauma, crisis...)"
             value={formData.asunto}
             onChange={handleChange}
           />
@@ -151,6 +154,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
           <textarea
             name="medicacion"
             className="form-control"
+            placeholder="Especifica si el paciente se medica o sigue algún tratamiento médico influyente"
             value={formData.medicacion}
             onChange={handleChange}
           />
@@ -163,9 +167,9 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
             value={formData.prioridad_seguimiento}
             onChange={handleChange}
           >
-            <option value="Alta">Alta</option>
-            <option value="Media">Media</option>
-            <option value="Baja">Baja</option>
+            <option value="Alta">🔴 Alta</option>
+            <option value="Media">🟡 Media</option>
+            <option value="Baja">⚪ Baja</option>
           </select>
         </div>
 

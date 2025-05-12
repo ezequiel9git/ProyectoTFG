@@ -154,15 +154,33 @@ const ReportesPage = () => {
         ) : (
           <Tab.Container defaultActiveKey="global">
             <Nav variant="tabs" className="mb-4 justify-content-center">
-              <Nav.Item><Nav.Link eventKey="global">Estadísticas Globales</Nav.Link></Nav.Item>
-              <Nav.Item><Nav.Link eventKey="tabla">Sesiones por Paciente</Nav.Link></Nav.Item>
-              <Nav.Item><Nav.Link eventKey="grafico">Porcentaje de prioridad</Nav.Link></Nav.Item>
-              <Nav.Item><Nav.Link eventKey="prioridad">Prioridad de pacientes</Nav.Link></Nav.Item>
+              <Nav.Item><Nav.Link eventKey="global">
+                <img src="/LogoGráfico.png" alt="Estadísticas Globales" style={{ width: '20px', height: '20px', marginRight: '8px' }} />
+                Estadísticas Globales</Nav.Link></Nav.Item>
+              <Nav.Item><Nav.Link eventKey="tabla">
+                <img src="/LogoReloj.png" alt="Sesiones por Paciente" style={{ width: '20px', height: '20px', marginRight: '8px' }} />
+                      Sesiones por Paciente</Nav.Link></Nav.Item>
+              <Nav.Item><Nav.Link eventKey="grafico">
+                <img src="/LogoGráficoCircular.png" alt="Porcentaje de prioridad" style={{ width: '20px', height: '20px', marginRight: '8px' }} />
+                Porcentaje de prioridad</Nav.Link></Nav.Item>
+              <Nav.Item><Nav.Link eventKey="prioridad">
+                <img src="/LogoAlerta.png" alt="Prioridad de pacientes" style={{ width: '20px', height: '20px', marginRight: '8px' }} />
+                Prioridad de pacientes</Nav.Link></Nav.Item>
             </Nav>
 
             <Tab.Content>
               {/* GLOBAL */}
               <Tab.Pane eventKey="global">
+
+                <div className="d-flex align-items-center mb-4">
+                  <img src="/LogoGráfico.png" alt="Icono de estadísticas" className="mx-auto" style={{ width: '125px', height: '125px' }} />
+                  <div className="card-body text-center">
+                    <h4 className="card-title text-secundary">Estadísticas Globales</h4>
+                    <p className="text-muted fst-italic">Consulta estadísticas de carácter general que pueden resultar útiles para gestionar mejor tus sesiones.</p>
+                  </div>
+                </div>
+
+
                 <div className="row mb-4">
                   {[
                     { label: "Promedio de sesiones por paciente", value: estadisticasGenerales.promedioSesionesPorPaciente },
@@ -186,14 +204,20 @@ const ReportesPage = () => {
               {/* POR PACIENTE */}
               <Tab.Pane eventKey="tabla">
                 <div className="table-responsive mb-4">
-                  <h5 className="text-center mb-3">Resumen de sesiones por paciente</h5>
+                  <div className="d-flex align-items-center mb-4">
+                  <img src="/LogoReloj.png" alt="Icono de estadísticas" className="mx-auto" style={{ width: '125px', height: '125px' }} />
+                  <div className="card-body text-center">
+                    <h4 className="card-title text-secundary">Tabla de distribución de sesiones por paciente</h4>
+                    <p className="text-muted fst-italic">Esta tabla te ayudará a comprender mejor el tiempo acaparado de sesiones de tus pacientes.</p>
+                  </div>
+                </div>
                   <table className="table table-bordered table-hover">
                     <thead className="table-light">
                       <tr>
-                        <th>Nombre del Paciente</th>
-                        <th>Nº de Sesiones</th>
-                        <th>Duración Total (min)</th>
-                        <th>Duración Promedio (min)</th>
+                        <th style={{ backgroundColor: '#70041b', color: 'white' }}>Nombre del Paciente</th>
+                        <th style={{ backgroundColor: '#380694', color: 'white' }}>Nº de Sesiones</th>
+                        <th style={{ backgroundColor: '#380694', color: 'white' }}>Duración Total (min)</th>
+                        <th style={{ backgroundColor: '#380694', color: 'white' }}>Duración Promedio (min)</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -217,7 +241,13 @@ const ReportesPage = () => {
               {/* GRÁFICO */}
               <Tab.Pane eventKey="grafico">
                 <div className="mb-4">
-                  <h5 className="text-center mb-3">Distribución de pacientes por prioridad</h5>
+                  <div className="d-flex align-items-center mb-4">
+                    <img src="/LogoGráficoCircular.png" alt="Icono de estadísticas" className="mx-auto" style={{ width: '125px', height: '125px' }} />
+                    <div className="card-body text-center">
+                      <h4 className="card-title text-secundary">Gráfico de la escala de seguimiento de tus pacientes</h4>
+                      <p className="text-muted fst-italic">Este gráfico muestra de forma práctica la prioridad de seguimiento de tus pacientes en porcentajes.</p>
+                  </div>
+                </div>
                   <ResponsiveContainer width="100%" height={300}>
                     <PieChart>
                       <Pie
@@ -243,13 +273,19 @@ const ReportesPage = () => {
               {/* TABLA POR PRIORIDAD */}
               <Tab.Pane eventKey="prioridad">
                 <div className="table-responsive">
-                  <h5 className="text-center mb-3">Pacientes agrupados por prioridad de seguimiento</h5>
+                  <div className="d-flex align-items-center mb-4">
+                  <img src="/LogoAlerta.png" alt="Icono de estadísticas" className="mx-auto" style={{ width: '125px', height: '125px' }} />
+                  <div className="card-body text-center">
+                    <h4 className="card-title text-secundary">Tabla de prioridad de seguimiento</h4>
+                    <p className="text-muted fst-italic">Consulta de forma rápida qué pacientes requieren mayor atención en función de su prioridad de seguimiento.</p>
+                  </div>
+                </div>
                   <table className="table table-bordered table-hover">
                     <thead className="table-light">
                       <tr>
-                        <th>Prioridad</th>
-                        <th>Nombre del Paciente</th>
-                        <th>Asunto</th>
+                        <th style={{ backgroundColor: '#700346', color: 'white' }}>Prioridad</th>
+                        <th style={{ backgroundColor: '#70041b', color: 'white' }}>Nombre del Paciente</th>
+                        <th style={{ backgroundColor: '#035e0a', color: 'white' }}>Asunto</th>
                       </tr>
                     </thead>
                     <tbody>
