@@ -3,6 +3,9 @@ import axios from 'axios';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import AuthContext from '../context/AuthContext';
 import { Tab, Nav } from 'react-bootstrap';
+import { FcStatistics, FcAlarmClock, FcBullish, FcClock, FcBusinessman, FcBusinesswoman } from "react-icons/fc";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts'; // Agrega esta importación junto a las otras de recharts
+
 
 const COLORS = ['#FF6384', '#FFCE56', '#36A2EB'];
 
@@ -183,15 +186,20 @@ const ReportesPage = () => {
 
                 <div className="row mb-4">
                   {[
-                    { label: "Promedio de sesiones por paciente", value: estadisticasGenerales.promedioSesionesPorPaciente },
-                    { label: "Duración total de todas las sesiones", value: `${estadisticasGenerales.duracionTotalGlobal} min` },
-                    { label: "Duración promedio de sesiones", value: `${estadisticasGenerales.duracionPromedioGlobal} min` },
-                    { label: "Paciente con más sesiones", value: estadisticasGenerales.pacienteConMasSesiones || "N/A" },
-                    { label: "Paciente con mayor duración total", value: estadisticasGenerales.pacienteConMayorDuracion || "N/A" },
+                    { label: "Promedio de sesiones por paciente", value: estadisticasGenerales.promedioSesionesPorPaciente, icon: <FcStatistics style={{fontSize: 32, marginBottom: 8}} />},
+                    { label: "Duración total de todas las sesiones", value: `${estadisticasGenerales.duracionTotalGlobal} min`, icon: <FcAlarmClock style={{fontSize: 32, marginBottom: 8}} /> },
+                    { label: "Duración promedio de sesiones", value: `${estadisticasGenerales.duracionPromedioGlobal} min`, icon: <FcAlarmClock style={{fontSize: 32, marginBottom: 8}} /> },
+                    { label: "Cantidad total de pacientes", value: reportes.length, icon: <FcBullish style={{fontSize: 32, marginBottom: 8}} /> }, 
+                    { label: "Paciente con más sesiones", value: estadisticasGenerales.pacienteConMasSesiones || "N/A", icon: <FcBusinessman style={{fontSize: 32, marginBottom: 8}} /> },
+                    { label: "Paciente con mayor duración total", value: estadisticasGenerales.pacienteConMayorDuracion || "N/A", icon: <FcBusinesswoman style={{fontSize: 32, marginBottom: 8}} /> },
+                    { label: "Sesión más larga (min)", value: Math.max(...reportes.map(r => r.duracionTotal || 0)), icon: <FcClock style={{fontSize: 32, marginBottom: 8}} /> },
+                    { label: "Sesión promedio más larga por paciente (min)", value: Math.max(...reportes.map(r => parseFloat(r.duracionPromedio) || 0)), icon: <FcClock style={{fontSize: 32, marginBottom: 8}} /> },
+                    { label: "Sesión promedio más corta por paciente (min)", value: Math.min(...reportes.map(r => parseFloat(r.duracionPromedio) || 0)), icon: <FcClock style={{fontSize: 32, marginBottom: 8}} /> },
                   ].map((item, i) => (
                     <div className="col-md-4 mb-3" key={i}>
                       <div className="card border-0 shadow-sm rounded-3 text-center">
                         <div className="card-body">
+                          <div>{item.icon}</div>
                           <h6 className="text-muted">{item.label}</h6>
                           <h4 className="text-primary">{item.value}</h4>
                         </div>
@@ -238,7 +246,7 @@ const ReportesPage = () => {
                 </div>
               </Tab.Pane>
 
-              {/* GRÁFICO */}
+              {/* GRÁFICOS */}
               <Tab.Pane eventKey="grafico">
                 <div className="mb-4">
                   <div className="d-flex align-items-center mb-4">
@@ -268,6 +276,41 @@ const ReportesPage = () => {
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
+
+                {/* NUEVO GRÁFICO DE BARRAS */}
+                <div className="mb-4">
+                  <div className="d-flex align-items-center mb-4">
+                    <img src="/LogoGráfico.png" alt="Icono de barras" className="mx-auto" style={{ width: '125px', height: '125px' }} />
+                    <div className="card-body text-center">
+                      <h4 className="card-title text-secundary">Pacientes por Prioridad de Seguimiento</h4>
+                      <p className="text-muted fst-italic">Este gráfico muestra la cantidad absoluta de pacientes en cada nivel de prioridad.</p>
+                    </div>
+                  </div>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                      <ResponsiveContainer width={400} height={250}>
+                        <BarChart
+                          data={[
+                            { name: 'Alta', cantidad: pacientesPorPrioridad.Alta.length },
+                            { name: 'Media', cantidad: pacientesPorPrioridad.Media.length },
+                            { name: 'Baja', cantidad: pacientesPorPrioridad.Baja.length },
+                          ]}
+                          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                          barCategoryGap="30%"
+                        >
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="name" />
+                          <YAxis allowDecimals={false} />
+                          <Tooltip />
+                          <Bar dataKey="cantidad">
+                            <Cell key="alta" fill={COLORS[0]} /> {/* Alta: #FF6384 */}
+                            <Cell key="media" fill={COLORS[1]} /> {/* Media: #FFCE56 */}
+                            <Cell key="baja" fill={COLORS[2]} /> {/* Baja: #36A2EB */}
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
               </Tab.Pane>
 
               {/* TABLA POR PRIORIDAD */}

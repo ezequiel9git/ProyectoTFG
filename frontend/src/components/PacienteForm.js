@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
+import { FcBusinessman, FcCalendar, FcExpired, FcLike, FcPortraitMode, FcPhone, FcHome, FcHighPriority, FcMediumPriority, FcLowPriority } from "react-icons/fc";
 
 const PacienteForm = ({ pacienteEditado, onExito }) => {
   const { authTokens } = useContext(AuthContext);
@@ -95,7 +96,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
 
       <form onSubmit={handleSubmit}>
         <div className="mb-2">
-          <h6>Nombre</h6>
+          <h6><FcBusinessman style={{marginRight: 6}} /> Nombre</h6>
           <input
             type="text"
             name="nombre"
@@ -106,7 +107,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
           />
         </div>
         <div className="mb-2">
-          <h6>Edad</h6>
+          <h6><FcCalendar style={{marginRight: 6}} /> Edad</h6>
           <input
             type="number"
             name="edad"
@@ -117,7 +118,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
           />
         </div>
         <div className="mb-2">
-          <h6>Teléfono de contacto</h6>
+          <h6><FcPhone style={{marginRight: 6}} /> Teléfono de contacto</h6>
           <input
             type="text"
             name="telefono"
@@ -128,7 +129,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
           />
         </div>
         <div className="mb-2">
-          <h6>Dirección</h6>
+          <h6><FcHome style={{marginRight: 6}} /> Dirección</h6>
           <textarea
             name="direccion"
             className="form-control"
@@ -139,7 +140,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
           />
         </div>
         <div className="mb-2">
-          <h6>Asunto</h6>
+          <h6><FcPortraitMode style={{marginRight: 6}} /> Asunto</h6>
           <input
             type="text"
             name="asunto"
@@ -150,7 +151,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
           />
         </div>
         <div className="mb-2">
-          <h6>Tratamiento médico</h6>
+          <h6><FcLike style={{marginRight: 6}} /> Tratamiento médico</h6>
           <textarea
             name="medicacion"
             className="form-control"
@@ -160,16 +161,36 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
           />
         </div>
         <div className="mb-3">
-          <h6>Prioridad de seguimiento</h6>
-          <select
-            name="prioridad_seguimiento"
-            className="form-select"
-            value={formData.prioridad_seguimiento}
-            onChange={handleChange}
-          >
-            <option value="Alta">🔴 Alta</option>
-            <option value="Media">🟡 Media</option>
-            <option value="Baja">⚪ Baja</option>
+          <h6><FcExpired style={{marginRight: 6}} /> Prioridad de seguimiento</h6>
+            <select
+                name="prioridad_seguimiento"
+                className="form-select"
+                style={{
+                  color:
+                    formData.prioridad_seguimiento === 'Alta'
+                      ? '#dc3545' // rojo
+                      : formData.prioridad_seguimiento === 'Media'
+                      ? '#ecb716' // amarillo
+                      : '#6c757d', // gris para baja
+                  fontWeight: 'bold',
+                }}
+                value={formData.prioridad_seguimiento}
+                onChange={handleChange}
+              >
+            <option value="Alta">
+              {/* Icono para Alta */}
+              &#8203; {/* invisible char para evitar warning */}
+              <span style={{verticalAlign: 'middle'}}><FcHighPriority style={{marginRight: 4, fontSize: 18, verticalAlign: 'middle'}} /></span>
+              Alta
+            </option>
+            <option value="Media">
+              <span style={{verticalAlign: 'middle'}}><FcMediumPriority style={{marginRight: 4, fontSize: 18, verticalAlign: 'middle'}} /></span>
+              Media
+            </option>
+            <option value="Baja">
+              <span style={{verticalAlign: 'middle'}}><FcLowPriority style={{marginRight: 4, fontSize: 18, verticalAlign: 'middle'}} /></span>
+              Baja
+            </option>
           </select>
         </div>
 

@@ -2,6 +2,8 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
+import { FcCalendar, FcAlarmClock, FcMindMap, FcSurvey, FcTodoList, FcCheckmark, FcIdea, FcLowPriority } from "react-icons/fc";
+
 
 const SesionDetailPage = () => {
   const { id } = useParams();
@@ -54,28 +56,28 @@ const SesionDetailPage = () => {
 
       <div className="card p-4 shadow rounded-4" style={{ backgroundColor: '#ffffff' }}>
         <div className="mb-3">
-          <h5>Fecha:</h5> {sesion.fecha}
+          <h5><FcCalendar style={{marginRight: 6}} /> Fecha:</h5> {sesion.fecha}
         </div>
         <div className="mb-3">
-          <h5>Duración:</h5> {sesion.duracion} minutos
+          <h5><FcAlarmClock style={{marginRight: 6}} /> Duración:</h5> {sesion.duracion} minutos
         </div>
         <div className="mb-3">
-          <h5>Estado emocional</h5> {sesion.estado_emocional || 'N/A'}
+          <h5><FcMindMap style={{marginRight: 6}} /> Estado emocional:</h5> {sesion.estado_emocional || 'N/A'}
         </div>
         <div className="mb-3">
-          <h5>Evaluación de la sesión:</h5> {sesion.evaluacion || 'N/A'}
+          <h5><FcSurvey style={{marginRight: 6}} /> Evaluación de la sesión:</h5> {sesion.evaluacion || 'N/A'}
         </div>
         <div className="mb-3">
-          <h5>Seguimiento de hábitos:</h5> {sesion.seguimiento_habitos || 'N/A'}
+          <h5><FcTodoList style={{marginRight: 6}} /> Seguimiento de hábitos:</h5> {sesion.seguimiento_habitos || 'N/A'}
         </div>
         <div className="mb-3">
-          <h5>Actividades programadas:</h5> {sesion.actividades || 'N/A'}
+          <h5><FcCheckmark style={{marginRight: 6}} /> Actividades programadas:</h5> {sesion.actividades || 'N/A'}
         </div>
         <div className="mb-3">
-          <h5>Notas para la próxima sesión:</h5> {sesion.proxima_sesion || 'N/A'}
+          <h5><FcIdea style={{marginRight: 6}} /> Notas para la próxima sesión:</h5> {sesion.proxima_sesion || 'N/A'}
         </div>
         <div className="mb-3">
-          <h5>Seguimiento:</h5> {sesion.seguimiento || 'N/A'}
+          <h5><FcLowPriority style={{marginRight: 6}} /> Seguimiento:</h5> {sesion.seguimiento || 'N/A'}
         </div>
 
         <div className="text-end">
