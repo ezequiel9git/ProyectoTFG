@@ -44,7 +44,7 @@ const RegisterPage = () => {
     <div
       className="d-flex align-items-center justify-content-center"
       style={{
-        backgroundImage: 'url("/Fondo1.png")',
+        backgroundImage: 'url("/Fondo12.png")',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         minHeight: '100vh',

@@ -43,7 +43,7 @@ const Dashboard = () => {
         <div className="row g-4">
           {/* Pacientes */}
           <div className="col-md-4">
-            <div className="card h-100 text-center shadow rounded-4 p-3">
+            <div className="card h-100 text-center shadow rounded-4 p-3" style={{ background: "#ffffff", border: "2px solid #e4baf8" }}>
               <img src="/LogoPacientes.png" alt="Pacientes" className="mx-auto" style={{ width: '80px', height: '80px' }} />
               <div className="card-body">
                 <h4 className="card-title text-success">Pacientes y sesiones</h4>
@@ -59,7 +59,7 @@ const Dashboard = () => {
 
           {/* Reportes */}
           <div className="col-md-4">
-            <div className="card h-100 text-center shadow rounded-4 p-3">
+            <div className="card h-100 text-center shadow rounded-4 p-3" style={{ background: "#ffffff", border: "2px solid #68fac9" }}>
               <img src="/LogoReportes.png" alt="Reportes" className="mx-auto" style={{ width: '80px', height: '80px' }} />
               <div className="card-body">
                 <h4 className="card-title text-success">Estadísticas</h4>
@@ -75,7 +75,7 @@ const Dashboard = () => {
 
           {/* Agenda */}
           <div className="col-md-4">
-            <div className="card h-100 text-center shadow rounded-4 p-3">
+            <div className="card h-100 text-center shadow rounded-4 p-3" style={{ background: "#ffffff", border: "2px solid #9acafa" }}>
               <img src="/LogoAgenda.png" alt="Agenda" className="mx-auto" style={{ width: '80px', height: '80px' }} />
               <div className="card-body">
                 <h4 className="card-title text-success">Agenda</h4>

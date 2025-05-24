@@ -66,7 +66,7 @@ const PacientesPage = () => {
           </li>
         </ul>
 
-        <div className="card p-4 shadow rounded-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
+        <div className="card p-4 shadow rounded-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', border: "2px solid #fd8ed3" }}>
           {activeTab === 'lista' && (
             <PacienteList onEditarPaciente={handleEditar} recargarTrigger={recargarLista} />
           )}

@@ -27,7 +27,7 @@ const SesionesPage = () => {
     <div style={{ position: 'relative', height: '100vh', overflow: 'auto' }}>
       <div
         style={{
-          backgroundImage: "url('/Fondo1.png')",
+          backgroundImage: "url('/Fondo13.png')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           position: 'fixed',
@@ -38,7 +38,7 @@ const SesionesPage = () => {
           zIndex: -1,
         }}
       />
-      <div className="card p-1 shadow rounded-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
+      <div className="card p-1 shadow rounded-4" style={{ backgroundColor: '#ffffff' }}>
         <div className="d-flex align-items-center mb-1">
           <img src="/ListaSesionesLogo.png" alt="Icono de sesiones" className="mx-auto" style={{ width: '125px', height: '125px' }} />
           <div style={{ textAlign: "center" }} className="card-body">

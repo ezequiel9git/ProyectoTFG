@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
+import { FcHighPriority, FcMediumPriority, FcLowPriority } from "react-icons/fc";
 
 const PacienteList = ({ onEditarPaciente, recargarTrigger }) => {
   const { authTokens } = useContext(AuthContext);
@@ -39,14 +40,17 @@ const PacienteList = ({ onEditarPaciente, recargarTrigger }) => {
       }
     }
   };
-
+  // Función que traduce el formato de la prioridad
   const renderPrioridad = (prioridad) => {
-    const color =
-      prioridad === 'Alta' ? 'danger' :
-      prioridad === 'Media' ? 'warning' :
-      'secondary';
-    return <span className={`badge bg-${color} rounded-pill`}>{prioridad}</span>;
-  };
+      if (prioridad === 'Alta') {
+        return <FcHighPriority size={28} title="Alta" />;
+      }
+      if (prioridad === 'Media') {
+        return <FcMediumPriority size={28} title="Media" />;
+      }
+      // Baja u otro valor
+      return <FcLowPriority size={28} title="Baja" />;
+    };
 
   useEffect(() => {
     fetchPacientes();
@@ -96,7 +100,7 @@ const PacienteList = ({ onEditarPaciente, recargarTrigger }) => {
                     <td>{paciente.direccion}</td>
                     <td>{paciente.asunto || '-'}</td>
                     <td>{paciente.medicacion || '-'}</td>
-                    <td>{renderPrioridad(paciente.prioridad_seguimiento)}</td>
+                    <td className="text-center align-middle">{renderPrioridad(paciente.prioridad_seguimiento)}</td>
                     <td className="d-flex flex-wrap gap-2">
                       <Link
                         to={`/pacientes/${paciente.id}/sesiones`}

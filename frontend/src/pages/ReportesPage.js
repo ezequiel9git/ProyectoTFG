@@ -132,7 +132,7 @@ const ReportesPage = () => {
     <div style={{ position: 'relative', height: '100vh', overflow: 'auto' }}>
       <div
         style={{
-          backgroundImage: "url('/Fondo1.png')",
+          backgroundImage: "url('/Fondo10.png')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           position: 'fixed',

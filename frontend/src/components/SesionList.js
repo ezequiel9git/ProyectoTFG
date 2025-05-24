@@ -51,15 +51,32 @@ const SesionList = ({ pacienteId, onEditarSesion }) => {
     }
   };
 
+  // Función que traduce el formato de fecha  
+  const formatearFecha = (fechaISO) => {
+        if (!fechaISO) return '';
+        const meses = [
+          'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+          'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+        ];
+        const [a, m, d] = fechaISO.split('-');
+        const dia = parseInt(d, 10);
+        const mes = meses[parseInt(m, 10) - 1];
+        return `${dia} de ${mes} de ${a}`;
+      };
+
   useEffect(() => {
     if (pacienteId) {
       fetchSesiones();
     }
   }, [pacienteId]);
 
-  if (loading) {
-    return <p>Cargando sesiones...</p>;
-  }
+  if (loading) return (
+  <div className="d-flex justify-content-center align-items-center" style={{ height: "80vh" }}>
+    <div className="spinner-border text-primary" role="status" style={{ width: "4rem", height: "4rem" }}>
+      <span className="visually-hidden">Cargando...</span>
+    </div>
+  </div>
+);
 
   if (error) {
     return <div className="alert alert-danger">{error}</div>;
@@ -73,16 +90,17 @@ const SesionList = ({ pacienteId, onEditarSesion }) => {
     <div className="row">
       {sesiones.map((sesion) => (
         <div key={sesion.id} className="col-md-6 mb-4">
-          <div className="card shadow-sm rounded-4 h-100">
+          <div className="card shadow-sm rounded-4 h-100" style={{ background: "#fdfce4", border: "2px solid #fdc89c" }}>
             <div className="card-body">
-              <h5 className="card-title text-primary">
+              <div className="p-3 rounded-3 w-100 text-center" style={{ background: "#ffffff", border: "1px solid #fd8ed3" }}>
+              <h5 className="card-title text-primary text-center">
                 <FcCalendar style={{marginRight: 6, verticalAlign: 'middle'}} />
-                <strong>Fecha:</strong> {sesion.fecha}
-              </h5>
-              <p className="card-text">
-                <FcSurvey style={{marginRight: 6, verticalAlign: 'middle'}} />
-                <strong>Evaluación:</strong> {sesion.evaluacion || 'N/A'}
-              </p>
+                {formatearFecha(sesion.fecha)}                
+              </h5></div><br></br>
+              <div className="p-3 rounded-3 w-100 text-center" style={{ background: "#ffffff", border: "1px solid #9acafa" }}>
+              <h5 className="text-primary text-center"><FcSurvey style={{marginRight: 6, verticalAlign: 'middle'}} />Informe de sesión</h5>
+              <p className="card-text">{sesion.evaluacion || 'N/A'}
+              </p></div>
               <div className="mt-4 d-flex flex-row gap-3 justify-content-center align-items-center">
                 <Link to={`/sesiones/${sesion.id}`} className="btn btn-primary">
                   Consultar sesión completa

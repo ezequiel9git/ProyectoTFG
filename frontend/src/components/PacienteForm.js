@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { FcBusinessman, FcCalendar, FcExpired, FcLike, FcPortraitMode, FcPhone, FcHome, FcHighPriority, FcMediumPriority, FcLowPriority } from "react-icons/fc";
 
 const PacienteForm = ({ pacienteEditado, onExito }) => {
@@ -101,6 +103,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
             type="text"
             name="nombre"
             className="form-control"
+            placeholder="Nombre del paciente"
             value={formData.nombre}
             onChange={handleChange}
             required
@@ -123,6 +126,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
             type="text"
             name="telefono"
             className="form-control"
+            placeholder="Principal teléfono de contacto del paciente"
             value={formData.telefono}
             onChange={handleChange}
             required
@@ -209,6 +213,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
           )}
         </div>
       </form>
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 };

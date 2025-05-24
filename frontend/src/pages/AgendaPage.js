@@ -3,6 +3,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+ import esLocale from '@fullcalendar/core/locales/es';
 import axios from 'axios';
 import Modal from 'react-modal';
 import AuthContext from '../context/AuthContext';
@@ -152,7 +153,7 @@ const AgendaPage = () => {
     <div style={{ position: 'relative', height: '100vh', overflow: 'auto' }}>
       <div
         style={{
-          backgroundImage: "url('/Fondo5.png')",
+          backgroundImage: "url('/Fondo14.png')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           position: 'fixed',
@@ -178,6 +179,7 @@ const AgendaPage = () => {
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
+            locale={esLocale}
             headerToolbar={{
               left: 'prev,next today',
               center: 'title',
