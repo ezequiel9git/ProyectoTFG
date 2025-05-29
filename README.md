@@ -1,46 +1,89 @@
-# ProyectoTFG
-# **Diario-Agenda de sesiones y seguimiento de pacientes para terapeutas**
-Este proyecto consistirá en una aplicación donde que los terapeutas registren sesiones, hagan sus evaluaciones, guarden notas sobre el progreso de sus pacientes y programen futuras citas. Todo estaría bien estructurado y organizado para priorizar la comodidad del usuario. Cada paciente contaría con su categoría individual de registros, haciéndolo todo más organizado, y todo esto se almacenaría en una base de datos. La aplicación contaría por supuesto con login de acceso, así solo accedería el profesional y se respetaría la privacidad de cada paciente.
- 
-<br>
+# 📖 Diario-Agenda de Sesiones y Seguimiento de Pacientes para Terapeutas
+Esta aplicación web permite a terapeutas gestionar de forma integral la información de sus pacientes, registrar sesiones de terapia, realizar evaluaciones, llevar notas de progreso y programar citas en una agenda visual. El sistema está diseñado para priorizar la comodidad, la organización y la privacidad del profesional, ofreciendo una experiencia moderna y segura.
 
-## 📌 Funcionalidades del Proyecto
-- Registro e inicio de sesión para los terapeutas.
-- Creación y gestión de pacientes.
-- Registro de sesiones de terapia con notas.
-- Listado de pacientes y sus sesiones.
-- Autenticación con JWT.
+<br><br>
 
-<br>
+## 📝 Características principales
+- 🔐 **Autenticación segura:** Registro e inicio de sesión de terapeutas mediante JWT.
+- 👨‍👨‍👦‍👦**Gestión de pacientes:** Alta, edición, eliminación y visualización de pacientes, con campos para datos personales, motivo de consulta, medicación y prioridad de seguimiento.
+- 📚 **Registro de sesiones:** Creación y edición de sesiones asociadas a cada paciente, con campos para fecha, duración, estado emocional, evaluación, seguimiento de hábitos, actividades asignadas y notas para próximas sesiones.
+- 📅 **Agenda de citas:** Calendario interactivo para programar, editar y eliminar citas, asociando cada cita a un paciente.
+- 📊 **Estadísticas y reportes:** Panel de reportes con gráficos y tablas que muestran estadísticas globales y por paciente, incluyendo distribución de prioridades, duración de sesiones y pacientes con mayor seguimiento.
+- 🌠 **Interfaz intuitiva:** Navegación protegida para usuarios autenticados, diseño responsive y uso de iconografía visual.
+- 🔩 **Backend robusto:** API RESTful desarrollada en Django y Django REST Framework, con PostgreSQL como base de datos.
+- 💻 **Frontend moderno:** Aplicación React con Bootstrap, React Router, FullCalendar y Recharts para visualización de datos.
 
-## Proyecto
-- [Planning de proyecto](https://github.com/users/ezequiel9git/projects/2)
+<br><br>
 
-<br>
+## 📂 Estructura del proyecto
 
-## 🛠 Tecnologías
-### 📟 Frontend
-- React
-- React Router
-- Axios
+```
+ProyectoTFG/
+│
+├── backend/
+│   ├── manage.py
+│   ├── backend/           # Configuración principal de Django
+│   └── api/               # App principal: modelos, vistas, serializers, urls
+│
+├── frontend/
+│   ├── public/
+│   └── src/               # Componentes, páginas, contextos y utilidades de React
+│
+└── README.md
+```
 
+<br><br>
 
+## ⏫ Tecnologías utilizadas
+- 📺 **Frontend:** React, Bootstrap, React Router, Axios, FullCalendar, Recharts, React Icons
+- 🔀 **Backend:** Django, Django REST Framework, Simple JWT, CORS Headers
+- 📋 **Base de datos:** PostgreSQL
+- 📑 **ORM:** Django ORM
 
-### ➿ Backend
-- Django
-- Django REST Framework
-- Simple JWT
+<br><br>
 
+## ⏬ Instalación y ejecución
 
+### 🔽 Backend
 
-### 📋 Base de Datos
-- PostgreSQL
+1. Instala las dependencias en un entorno virtual:
+   ```sh
+   cd backend
+   python -m venv env
+   source env/bin/activate  # En Windows: .\env\Scripts\activate
+   pip install -r requirements.txt
+   ```
+2. Configura la base de datos PostgreSQL en settings.py.
+3. Aplica migraciones y crea un superusuario:
+   ```sh
+   python manage.py migrate
+   python manage.py createsuperuser
+   python manage.py runserver
+   ```
+   El backend estará disponible en [http://localhost:8000](http://localhost:8000).
 
+### 🔽 Frontend
 
+1. Instala las dependencias:
+   ```sh
+   cd frontend
+   npm install
+   ```
+2. Inicia la aplicación:
+   ```sh
+   npm start
+   ```
+   El frontend estará disponible en [http://localhost:3000](http://localhost:3000).
 
-### 🔹 ORM
-- Django ORM: Es un sistema que me permitirá interactuar con bases de datos utilizando Python en lugar de SQL. Esta herramienta me evita escribir SQL manualmente, es más seguro (previene inyecciones SQL), soporta PostgreSQL (la base de datos que voy a usar) y además es fácil de usar y mantener.
+<br><br>
 
+## 🖱️ Uso
+1. Regístrate como terapeuta y accede con tus credenciales.
+2. Gestiona pacientes y sus sesiones desde el panel principal.
+3. Programa y administra tus citas en la agenda.
+4. Consulta estadísticas y reportes visuales para mejorar tu gestión.
 
-### 🔹 Autenticación
-- JSON Web Tokens (JWT): Me encanta este mecanismo y me parece muy competente porque no usa sesiones en el servidor (lo que mejora la escalabilidad), es muy seguro (la firma del token impide modificaciones maliciosas), es rápido (no es necesario consultar la base de datos en cada solicitud) y es compatible con APIs.
+<br><br>
+
+## ©️ Licencia
+Desarrollado como Trabajo de Fin de Grado por Ezequiel.
