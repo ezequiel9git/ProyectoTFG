@@ -86,7 +86,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
   return (
     <div className="card p-4 mt-1">
       <div className="d-flex align-items-center mb-4">
-        <img src="/AgregarPacientesLogo.png" alt="Icono de agregar pacientes" className="mx-auto" style={{ width: '153px', height: '102px' }} />
+        <img src="/AgregarPacientesLogo.png" alt="Icono de agregar pacientes" className="mx-auto" style={{ width: '125px', height: '125px' }} />
           <div className="card-body text-center">
             <h4>{pacienteEditado ? 'Editar Paciente' : 'Agregar Paciente'}</h4>
             <p className="text-muted fst-italic">En este panel puedes agregar un nuevo paciente al registro.</p>

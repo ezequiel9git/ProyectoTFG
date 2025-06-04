@@ -3,7 +3,18 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
 import { FcCalendar, FcSurvey } from "react-icons/fc";
+import { motion, AnimatePresence } from 'framer-motion';
 
+const cardVariants = {
+  hidden: { opacity: 0, y: 60, scale: 0.97 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { delay: 0.2 + i * 0.15, duration: 0.7, type: 'spring', stiffness: 60 }
+  }),
+  exit: { opacity: 0, y: 60, scale: 0.97, transition: { duration: 0.3 } }
+};
 
 const SesionList = ({ pacienteId, onEditarSesion }) => {
   const { authTokens } = useContext(AuthContext);
@@ -71,58 +82,129 @@ const SesionList = ({ pacienteId, onEditarSesion }) => {
   }, [pacienteId]);
 
   if (loading) return (
-  <div className="d-flex justify-content-center align-items-center" style={{ height: "80vh" }}>
-    <div className="spinner-border text-primary" role="status" style={{ width: "4rem", height: "4rem" }}>
-      <span className="visually-hidden">Cargando...</span>
-    </div>
-  </div>
-);
+    <motion.div
+      className="d-flex justify-content-center align-items-center"
+      style={{ height: "80vh" }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+    >
+      <motion.div
+        className="spinner-border text-primary"
+        role="status"
+        style={{ width: "4rem", height: "4rem" }}
+        initial={{ scale: 0.7, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.2, type: 'spring' }}
+      >
+        <span className="visually-hidden">Cargando...</span>
+      </motion.div>
+    </motion.div>
+  );
 
   if (error) {
-    return <div className="alert alert-danger">{error}</div>;
+    return (
+      <motion.div
+        className="alert alert-danger"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        {error}
+      </motion.div>
+    );
   }
 
   if (sesiones.length === 0) {
-    return <p>No hay sesiones registradas.</p>;
+    return (
+      <motion.p
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        No hay sesiones registradas.
+      </motion.p>
+    );
   }
 
   return (
-    <div className="row">
-      {sesiones.map((sesion) => (
-        <div key={sesion.id} className="col-md-6 mb-4">
-          <div className="card shadow-sm rounded-4 h-100" style={{ background: "#fdfce4", border: "2px solid #fdc89c" }}>
-            <div className="card-body">
-              <div className="p-3 rounded-3 w-100 text-center" style={{ background: "#ffffff", border: "1px solid #fd8ed3" }}>
-              <h5 className="card-title text-primary text-center">
-                <FcCalendar style={{marginRight: 6, verticalAlign: 'middle'}} />
-                {formatearFecha(sesion.fecha)}                
-              </h5></div><br></br>
-              <div className="p-3 rounded-3 w-100 text-center" style={{ background: "#ffffff", border: "1px solid #9acafa" }}>
-              <h5 className="text-primary text-center"><FcSurvey style={{marginRight: 6, verticalAlign: 'middle'}} />Informe de sesión</h5>
-              <p className="card-text">{sesion.evaluacion || 'N/A'}
-              </p></div>
-              <div className="mt-4 d-flex flex-row gap-3 justify-content-center align-items-center">
-                <Link to={`/sesiones/${sesion.id}`} className="btn btn-primary">
-                  Consultar sesión completa
-                </Link>
-                <button
-                  className="btn btn-sm px-4 py-2 shadow btn-editar"
-                  onClick={() => onEditarSesion(sesion)}
+    <motion.div
+      className="row g-4"
+      initial={{ opacity: 0, scale: 0.97 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.7, ease: 'easeOut' }}
+    >
+      <AnimatePresence>
+        {sesiones.map((sesion, i) => (
+          <motion.div
+            key={sesion.id}
+            className="col-md-6 mb-4"
+            custom={i}
+            variants={cardVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            whileHover={{
+              scale: 1.04,
+              boxShadow: "0 0 32px #fdc89c",
+              borderColor: "#fd8ed3"
+            }}
+            transition={{ type: "spring", stiffness: 120 }}
+            style={{ borderRadius: "1.5rem" }}
+          >
+            <motion.div
+              className="card h-100 text-center shadow rounded-4 p-3"
+              style={{
+                background: "#fdfce4", // Color de relleno original conservado
+                border: "2px solid #fdc89c",
+                borderRadius: "1.5rem"
+              }}
+              animate={{ boxShadow: "0 2px 16px #fdc89c" }}
+              transition={{ duration: 0.8 }}
+            >
+              <div className="card-body">
+                <div
+                  className="p-3 rounded-3 w-100 text-center"
+                  style={{ background: "#ffffff", border: "1px solid #fd8ed3" }}
                 >
-                  Editar
-                </button>
-                <button
-                  className="btn btn-sm px-4 py-2 shadow btn-eliminar"
-                  onClick={() => handleEliminar(sesion.id)}
+                  <h5 className="card-title text-primary text-center">
+                    <FcCalendar style={{marginRight: 6, verticalAlign: 'middle'}} />
+                    {formatearFecha(sesion.fecha)}                
+                  </h5>
+                </div>
+                <br />
+                <div
+                  className="p-3 rounded-3 w-100 text-center"
+                  style={{ background: "#ffffff", border: "1px solid #9acafa" }}
                 >
-                  Eliminar
-                </button>
+                  <h5 className="text-primary text-center">
+                    <FcSurvey style={{marginRight: 6, verticalAlign: 'middle'}} />Informe de sesión
+                  </h5>
+                  <p className="card-text">{sesion.evaluacion || 'N/A'}</p>
+                </div>
+                <div className="mt-4 d-flex flex-row gap-3 justify-content-center align-items-center">
+                  <Link to={`/sesiones/${sesion.id}`} className="btn btn-primary">
+                    Consultar sesión completa
+                  </Link>
+                  <button
+                    className="btn btn-sm px-4 py-2 shadow btn-editar"
+                    onClick={() => onEditarSesion(sesion)}
+                  >
+                    Editar
+                  </button>
+                  <button
+                    className="btn btn-sm px-4 py-2 shadow btn-eliminar"
+                    onClick={() => handleEliminar(sesion.id)}
+                  >
+                    Eliminar
+                  </button>
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
+            </motion.div>
+          </motion.div>
+        ))}
+      </AnimatePresence>
+    </motion.div>
   );
 };
 

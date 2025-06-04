@@ -3,6 +3,17 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { FcHighPriority, FcMediumPriority, FcLowPriority } from "react-icons/fc";
+import { motion, AnimatePresence } from 'framer-motion'; // Añadido
+
+const rowVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: 0.2 + i * 0.07, duration: 0.5, type: 'spring', stiffness: 60 }
+  }),
+  exit: { opacity: 0, y: 30, transition: { duration: 0.3 } }
+};
 
 const PacienteList = ({ onEditarPaciente, recargarTrigger }) => {
   const { authTokens } = useContext(AuthContext);
@@ -57,18 +68,50 @@ const PacienteList = ({ onEditarPaciente, recargarTrigger }) => {
   }, [recargarTrigger]);
 
   return (
-    <div className="mt-1">
-      <div className="d-flex align-items-center mb-4">
-        <img src="/LogoPacientes.png" alt="Pacientes" className="mx-auto" style={{ width: '125px', height: '125px' }} />
-          <div className="card-body">
-            <p style={{ fontStyle: "italic", textAlign: "center" }}>Aquí se muestran todos los pacientes que tienes registrados.</p>
-            <p style={{ fontStyle: "italic", textAlign: "center" }}>Desde este panel, podrás gestionar los registros y acceder a su informe de sesiones.</p>
-          </div>
-      </div>
+    <motion.div
+      className="mt-1"
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, ease: 'easeOut' }}
+    >
+      <motion.div
+        className="d-flex align-items-center mb-4"
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, delay: 0.2, type: 'spring', stiffness: 60 }}
+      >
+        <motion.img
+          src="/LogoPacientes.png"
+          alt="Pacientes"
+          className="mx-auto"
+          style={{ width: '125px', height: '125px' }}
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.7, delay: 0.3, type: 'spring', stiffness: 80 }}
+        />
+        <div className="card-body">
+          <motion.p
+            style={{ fontStyle: "italic", textAlign: "center" }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.4 }}
+          >
+            Aquí se muestran todos los pacientes que tienes registrados.
+          </motion.p>
+          <motion.p
+            style={{ fontStyle: "italic", textAlign: "center" }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.5 }}
+          >
+            Desde este panel, podrás gestionar los registros y acceder a su informe de sesiones.
+          </motion.p>
+        </div>
+      </motion.div>
 
-      {error && <div className="alert alert-danger">{error}</div>}
+      {error && <motion.div className="alert alert-danger" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{error}</motion.div>}
       {loading ? (
-        <p>Cargando pacientes...</p>
+        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}>Cargando pacientes...</motion.p>
       ) : (
         <div className="table-responsive">
           <table className="table table-striped table-bordered shadow-sm rounded">
@@ -86,49 +129,61 @@ const PacienteList = ({ onEditarPaciente, recargarTrigger }) => {
             </thead>
             <tbody>
               {pacientes.length === 0 ? (
-                <tr>
+                <motion.tr
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                >
                   <td colSpan="8" className="text-center py-4">
                     No hay pacientes registrados.
                   </td>
-                </tr>
+                </motion.tr>
               ) : (
-                pacientes.map(paciente => (
-                  <tr key={paciente.id}>
-                    <td>{paciente.nombre}</td>
-                    <td>{paciente.edad}</td>
-                    <td>{paciente.telefono}</td>
-                    <td>{paciente.direccion}</td>
-                    <td>{paciente.asunto || '-'}</td>
-                    <td>{paciente.medicacion || '-'}</td>
-                    <td className="text-center align-middle">{renderPrioridad(paciente.prioridad_seguimiento)}</td>
-                    <td className="d-flex flex-wrap gap-2">
-                      <Link
-                        to={`/pacientes/${paciente.id}/sesiones`}
-                        className="btn btn-sm  px-3 shadow btn-agregar"
-                      > Gestionar sesiones
-                      </Link>
-                      <button
-                        className="btn btn-sm  px-3 shadow btn-editar"
-                        onClick={() => onEditarPaciente(paciente)}
-                      >
-                        Editar
-                      </button>
-                      <button
-                        className="btn btn-sm  px-3 shadow btn-eliminar"
-                        onClick={() => handleEliminar(paciente.id)}
-                      >
-                        Borrar
-                      </button>
-
-                    </td>
-                  </tr>
-                ))
+                <AnimatePresence>
+                  {pacientes.map((paciente, i) => (
+                    <motion.tr
+                      key={paciente.id}
+                      custom={i}
+                      variants={rowVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit="exit"
+                      layout
+                    >
+                      <td>{paciente.nombre}</td>
+                      <td>{paciente.edad}</td>
+                      <td>{paciente.telefono}</td>
+                      <td>{paciente.direccion}</td>
+                      <td>{paciente.asunto || '-'}</td>
+                      <td>{paciente.medicacion || '-'}</td>
+                      <td className="text-center align-middle">{renderPrioridad(paciente.prioridad_seguimiento)}</td>
+                      <td className="d-flex flex-wrap gap-2">
+                        <Link
+                          to={`/pacientes/${paciente.id}/sesiones`}
+                          className="btn btn-sm  px-3 shadow btn-agregar"
+                        > Gestionar sesiones
+                        </Link>
+                        <button
+                          className="btn btn-sm  px-3 shadow btn-editar"
+                          onClick={() => onEditarPaciente(paciente)}
+                        >
+                          Editar
+                        </button>
+                        <button
+                          className="btn btn-sm  px-3 shadow btn-eliminar"
+                          onClick={() => handleEliminar(paciente.id)}
+                        >
+                          Borrar
+                        </button>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </AnimatePresence>
               )}
             </tbody>
           </table>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };
 

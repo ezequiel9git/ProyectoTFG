@@ -3,11 +3,11 @@ import axios from 'axios';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import AuthContext from '../context/AuthContext';
 import { Tab, Nav } from 'react-bootstrap';
-import { FcStatistics, FcAlarmClock, FcBullish, FcClock, FcBusinessman, FcBusinesswoman } from "react-icons/fc";
+import { FcHighPriority, FcMediumPriority, FcLowPriority, FcStatistics, FcAlarmClock, FcBullish, FcClock, FcBusinessman, FcBusinesswoman } from "react-icons/fc";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts'; // Agrega esta importación junto a las otras de recharts
 
-
-const COLORS = ['#FF6384', '#FFCE56', '#36A2EB'];
+// Define los colores para los gráficos de prioridades
+const COLORS = ['#FF6384', '#FFCE56', '#3ba10c'];
 
 const ReportesPage = () => {
   const { authTokens } = useContext(AuthContext);
@@ -65,7 +65,10 @@ const ReportesPage = () => {
             const totalSesiones = sesiones.length;
             const duracionTotal = sesiones.reduce((acc, sesion) => acc + (sesion.duracion || 0), 0);
             const duracionPromedio = totalSesiones > 0 ? (duracionTotal / totalSesiones).toFixed(1) : 0;
-
+            const duraciones = sesiones.map(s => s.duracion || 0);
+            const sesionMasLarga = duraciones.length > 0 ? Math.max(...duraciones) : 0;
+            const sesionMasCorta = duraciones.length > 0 ? Math.min(...duraciones) : 0;
+            
             totalDuracionGlobal += duracionTotal;
             totalSesionesGlobal += totalSesiones;
 
@@ -84,6 +87,8 @@ const ReportesPage = () => {
               totalSesiones,
               duracionTotal,
               duracionPromedio,
+              sesionMasLarga,
+              sesionMasCorta,
             };
           })
         );
@@ -122,6 +127,13 @@ const ReportesPage = () => {
     fetchReportes();
   }, [authTokens]);
 
+  // Traduce minutos a horas y minutos
+  function minutosAHoras(minutos) {
+  const h = Math.floor(minutos / 60).toString().padStart(2, '0');
+  const m = Math.round(minutos % 60).toString().padStart(2, '0');
+  return `${h}:${m}`;
+}
+
   const prioridadData = [
     { name: 'Alta', value: parseFloat(estadisticasGenerales.distribucionPrioridad.Alta) },
     { name: 'Media', value: parseFloat(estadisticasGenerales.distribucionPrioridad.Media) },
@@ -153,7 +165,7 @@ const ReportesPage = () => {
         </div>
 
         {loading ? (
-          <p className="text-center">Cargando reportes...</p>
+          <p className="text-center">Cargando estadísticas...</p>
         ) : (
           <Tab.Container defaultActiveKey="global">
             <Nav variant="tabs" className="mb-4 justify-content-center">
@@ -222,10 +234,12 @@ const ReportesPage = () => {
                   <table className="table table-bordered table-hover">
                     <thead className="table-light">
                       <tr>
-                        <th style={{ backgroundColor: '#70041b', color: 'white' }}>Nombre del Paciente</th>
-                        <th style={{ backgroundColor: '#380694', color: 'white' }}>Nº de Sesiones</th>
-                        <th style={{ backgroundColor: '#380694', color: 'white' }}>Duración Total (min)</th>
-                        <th style={{ backgroundColor: '#380694', color: 'white' }}>Duración Promedio (min)</th>
+                        <th style={{ backgroundColor: '#70041b', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Nombre del paciente</th>
+                        <th style={{ backgroundColor: '#380694', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Nº de sesiones</th>
+                        <th style={{ backgroundColor: '#380694', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Duración total<br></br> (Hora : Min)</th>
+                        <th style={{ backgroundColor: '#380694', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Duración promedio<br></br> (Hora : Min)</th>
+                        <th style={{ backgroundColor: '#380694', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Sesión más larga<br></br> (Hora : Min)</th>
+                        <th style={{ backgroundColor: '#380694', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Sesión más breve<br></br> (Hora : Min)</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -235,9 +249,11 @@ const ReportesPage = () => {
                         reportes.map((r, index) => (
                           <tr key={index}>
                             <td>{r.nombre}</td>
-                            <td>{r.totalSesiones}</td>
-                            <td>{r.duracionTotal}</td>
-                            <td>{r.duracionPromedio}</td>
+                            <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>{r.totalSesiones}</td>
+                            <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>{minutosAHoras(r.duracionTotal)}</td>
+                            <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>{minutosAHoras(r.duracionPromedio)}</td>
+                            <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>{minutosAHoras(r.sesionMasLarga)}</td>
+                            <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>{minutosAHoras(r.sesionMasCorta)}</td>
                           </tr>
                         ))
                       )}
@@ -304,7 +320,7 @@ const ReportesPage = () => {
                           <Bar dataKey="cantidad">
                             <Cell key="alta" fill={COLORS[0]} /> {/* Alta: #FF6384 */}
                             <Cell key="media" fill={COLORS[1]} /> {/* Media: #FFCE56 */}
-                            <Cell key="baja" fill={COLORS[2]} /> {/* Baja: #36A2EB */}
+                            <Cell key="baja" fill={COLORS[2]} /> {/* Baja: #4ada07 */}
                           </Bar>
                         </BarChart>
                       </ResponsiveContainer>
@@ -326,24 +342,52 @@ const ReportesPage = () => {
                   <table className="table table-bordered table-hover">
                     <thead className="table-light">
                       <tr>
-                        <th style={{ backgroundColor: '#700346', color: 'white' }}>Prioridad</th>
-                        <th style={{ backgroundColor: '#70041b', color: 'white' }}>Nombre del Paciente</th>
-                        <th style={{ backgroundColor: '#035e0a', color: 'white' }}>Asunto</th>
+                        <th style={{ backgroundColor: '#700346', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Prioridad</th>
+                        <th style={{ backgroundColor: '#70041b', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Nombre del Paciente</th>
+                        <th style={{ backgroundColor: '#035e0a', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Asunto</th>
                       </tr>
                     </thead>
                     <tbody>
                       {["Alta", "Media", "Baja"].map((nivel) =>
                         pacientesPorPrioridad[nivel].length === 0 ? (
                           <tr key={nivel}>
-                            <td>{nivel}</td>
+                            <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                              {nivel === "Alta" && <FcHighPriority style={{ fontSize: 22, verticalAlign: 'middle' }} />}
+                              {nivel === "Media" && <FcMediumPriority style={{ fontSize: 22, verticalAlign: 'middle' }} />}
+                              {nivel === "Baja" && <FcLowPriority style={{ fontSize: 22, verticalAlign: 'middle' }} />}
+                              <span style={{
+                                fontWeight: 'bold',
+                                color:
+                                  nivel === "Alta" ? "#d32f2f" :
+                                  nivel === "Media" ? "#fbc02d" :
+                                  "#388e3c",
+                                marginLeft: 8
+                              }}>
+                                {nivel}
+                              </span>
+                            </td>
                             <td colSpan="2" className="text-center">Sin pacientes</td>
                           </tr>
                         ) : (
                           pacientesPorPrioridad[nivel].map((p, index) => (
                             <tr key={`${nivel}-${index}`}>
-                              <td>{nivel}</td>
-                              <td>{p.nombre}</td>
-                              <td>{p.asunto}</td>
+                              <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                                {nivel === "Alta" && <FcHighPriority style={{ fontSize: 22, verticalAlign: 'middle' }} />}
+                                {nivel === "Media" && <FcMediumPriority style={{ fontSize: 22, verticalAlign: 'middle' }} />}
+                                {nivel === "Baja" && <FcLowPriority style={{ fontSize: 22, verticalAlign: 'middle' }} />}
+                                <span style={{
+                                  fontWeight: 'bold',
+                                  color:
+                                    nivel === "Alta" ? "#d32f2f" :
+                                    nivel === "Media" ? "#fbc02d" :
+                                    "#388e3c",
+                                  marginLeft: 8
+                                }}>
+                                  {nivel}
+                                </span>
+                              </td>
+                              <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>{p.nombre}</td>
+                              <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>{p.asunto}</td>
                             </tr>
                           ))
                         )
