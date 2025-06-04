@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
-import { FcHighPriority, FcMediumPriority, FcLowPriority } from "react-icons/fc";
+import { FcHighPriority, FcMediumPriority, FcLowPriority, FcFinePrint } from "react-icons/fc";
 import { motion, AnimatePresence } from 'framer-motion'; // Añadido
 
 const rowVariants = {
@@ -20,6 +20,8 @@ const PacienteList = ({ onEditarPaciente, recargarTrigger }) => {
   const [pacientes, setPacientes] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [busqueda, setBusqueda] = useState(""); // Nuevo estado para búsqueda
+  const [prioridadFiltro, setPrioridadFiltro] = useState(""); // Nuevo estado para prioridad
 
   const fetchPacientes = async () => {
     setLoading(true);
@@ -63,6 +65,12 @@ const PacienteList = ({ onEditarPaciente, recargarTrigger }) => {
       return <FcLowPriority size={28} title="Baja" />;
     };
 
+  // Filtrar pacientes por nombre y prioridad
+  const pacientesFiltrados = pacientes.filter(p =>
+    p.nombre.toLowerCase().includes(busqueda.toLowerCase()) &&
+    (prioridadFiltro === "" || p.prioridad_seguimiento === prioridadFiltro)
+  );
+
   useEffect(() => {
     fetchPacientes();
   }, [recargarTrigger]);
@@ -74,6 +82,8 @@ const PacienteList = ({ onEditarPaciente, recargarTrigger }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, ease: 'easeOut' }}
     >
+
+
       <motion.div
         className="d-flex align-items-center mb-4"
         initial={{ opacity: 0, y: -30 }}
@@ -113,7 +123,51 @@ const PacienteList = ({ onEditarPaciente, recargarTrigger }) => {
       {loading ? (
         <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}>Cargando pacientes...</motion.p>
       ) : (
+        
         <div className="table-responsive">
+          {/* Campo de búsqueda y filtro de prioridad */}
+           <div className="mb-3 row align-items-end">
+            {/* Filtro de búsqueda a la izquierda */}
+            <div className="col-md-4">
+              <label htmlFor="busquedaNombre" className="form-label fw-semibold">
+                <FcFinePrint style={{ marginRight: 6 }} /> Filtra pacientes por su nombre
+              </label>
+              <input
+                id="busquedaNombre"
+                type="text"
+                className="form-control"
+                placeholder="Introduce el nombre del paciente..."
+                value={busqueda}
+                onChange={e => setBusqueda(e.target.value)}
+                style={{ maxWidth: 300 }}
+              />
+            </div>
+            {/* Espacio vacío para centrar los filtros si es necesario */}
+            <div className="col-md-4"></div>
+            {/* Filtro de prioridad a la derecha */}
+            <div className="col-md-4">
+              <label
+                htmlFor="prioridadFiltro"
+                className="form-label fw-semibold"
+                style={{ display: "block", textAlign: "right" }} // Alineación derecha
+              >
+                Filtrar por prioridad
+                <FcHighPriority style={{ marginLeft: 6 }} />
+              </label>
+              <select
+                id="prioridadFiltro"
+                className="form-select"
+                value={prioridadFiltro}
+                onChange={e => setPrioridadFiltro(e.target.value)}
+                style={{ maxWidth: 220, marginLeft: "auto" }}
+              >
+                <option value="">Todas las prioridades</option>
+                <option value="Alta">Alta</option>
+                <option value="Media">Media</option>
+                <option value="Baja">Baja</option>
+              </select>
+            </div>
+          </div>
           <table className="table table-striped table-bordered shadow-sm rounded">
             <thead className="table-light" style={{ backgroundColor: '#6f42c1', color: 'white' }}>
               <tr>
@@ -128,7 +182,7 @@ const PacienteList = ({ onEditarPaciente, recargarTrigger }) => {
               </tr>
             </thead>
             <tbody>
-              {pacientes.length === 0 ? (
+              {pacientesFiltrados.length === 0 ? (
                 <motion.tr
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -139,7 +193,7 @@ const PacienteList = ({ onEditarPaciente, recargarTrigger }) => {
                 </motion.tr>
               ) : (
                 <AnimatePresence>
-                  {pacientes.map((paciente, i) => (
+                  {pacientesFiltrados.map((paciente, i) => (
                     <motion.tr
                       key={paciente.id}
                       custom={i}

@@ -84,7 +84,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
   };
 
   return (
-    <div className="card p-4 mt-1">
+    <div className="card p-4 mt-1" style={{ background: "#ffffff", border: "#ffffff" }}>
       <div className="d-flex align-items-center mb-4">
         <img src="/AgregarPacientesLogo.png" alt="Icono de agregar pacientes" className="mx-auto" style={{ width: '125px', height: '125px' }} />
           <div className="card-body text-center">

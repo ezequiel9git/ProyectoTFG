@@ -22,6 +22,7 @@ const ReportesPage = () => {
     pacienteConMayorDuracion: '',
     distribucionPrioridad: { Alta: 0, Media: 0, Baja: 0 },
   });
+  const [filtroPrioridad, setFiltroPrioridad] = useState(""); // <-- Estado para el filtro de prioridad
 
   useEffect(() => {
     const fetchReportes = async () => {
@@ -339,16 +340,37 @@ const ReportesPage = () => {
                     <p className="text-muted fst-italic">Consulta de forma rápida qué pacientes requieren mayor atención en función de su prioridad de seguimiento.</p>
                   </div>
                 </div>
-                  <table className="table table-bordered table-hover">
-                    <thead className="table-light">
-                      <tr>
-                        <th style={{ backgroundColor: '#700346', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Prioridad</th>
-                        <th style={{ backgroundColor: '#70041b', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Nombre del Paciente</th>
-                        <th style={{ backgroundColor: '#035e0a', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Asunto</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {["Alta", "Media", "Baja"].map((nivel) =>
+                {/* Filtro de prioridad */}
+                <div className="mb-3 d-flex justify-content-end">
+                  <div style={{ minWidth: 220 }}>
+                    <label htmlFor="filtroPrioridad" className="form-label fw-semibold" style={{ display: "block", textAlign: "right" }}>
+                      Filtrar por prioridad
+                    </label>
+                    <select
+                      id="filtroPrioridad"
+                      className="form-select"
+                      value={typeof filtroPrioridad !== "undefined" ? filtroPrioridad : ""}
+                      onChange={e => setFiltroPrioridad(e.target.value)}
+                    >
+                      <option value="">Todas las prioridades</option>
+                      <option value="Alta">Alta</option>
+                      <option value="Media">Media</option>
+                      <option value="Baja">Baja</option>
+                    </select>
+                  </div>
+                </div>
+                <table className="table table-bordered table-hover">
+                  <thead className="table-light">
+                    <tr>
+                      <th style={{ backgroundColor: '#700346', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Prioridad</th>
+                      <th style={{ backgroundColor: '#70041b', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Nombre del Paciente</th>
+                      <th style={{ backgroundColor: '#035e0a', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Asunto</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {["Alta", "Media", "Baja"]
+                      .filter(nivel => !filtroPrioridad || filtroPrioridad === nivel)
+                      .map((nivel) =>
                         pacientesPorPrioridad[nivel].length === 0 ? (
                           <tr key={nivel}>
                             <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
@@ -359,8 +381,8 @@ const ReportesPage = () => {
                                 fontWeight: 'bold',
                                 color:
                                   nivel === "Alta" ? "#d32f2f" :
-                                  nivel === "Media" ? "#fbc02d" :
-                                  "#388e3c",
+                                    nivel === "Media" ? "#fbc02d" :
+                                      "#388e3c",
                                 marginLeft: 8
                               }}>
                                 {nivel}
@@ -379,8 +401,8 @@ const ReportesPage = () => {
                                   fontWeight: 'bold',
                                   color:
                                     nivel === "Alta" ? "#d32f2f" :
-                                    nivel === "Media" ? "#fbc02d" :
-                                    "#388e3c",
+                                      nivel === "Media" ? "#fbc02d" :
+                                        "#388e3c",
                                   marginLeft: 8
                                 }}>
                                   {nivel}
@@ -392,10 +414,10 @@ const ReportesPage = () => {
                           ))
                         )
                       )}
-                    </tbody>
-                  </table>
-                </div>
-              </Tab.Pane>
+                  </tbody>
+                </table>
+              </div>
+            </Tab.Pane>
             </Tab.Content>
           </Tab.Container>
         )}

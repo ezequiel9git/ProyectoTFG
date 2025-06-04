@@ -165,7 +165,7 @@ const AgendaPage = () => {
         }}
       />
       <ToastContainer />
-      <div className="card p-4 shadow rounded-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
+      <div className="card p-4 shadow rounded-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', border: "2px solid #9acafa", borderRadius: "1.5rem" }}>
       <div className="d-flex align-items-center mb-4">
         <img src="/Logo9.png" alt="Icono de agenda" className="mx-auto" style={{ width: '125px', height: '125px' }} />
           <div className="card-body text-center">
@@ -175,7 +175,7 @@ const AgendaPage = () => {
           </div>
       </div>
 
-        <div className="card p-3 border-0 shadow-sm">
+        <div className="card p-3 border-0 shadow-sm" >
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
