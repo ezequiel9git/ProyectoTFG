@@ -4,16 +4,25 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recha
 import AuthContext from '../context/AuthContext';
 import { Tab, Nav } from 'react-bootstrap';
 import { FcHighPriority, FcMediumPriority, FcLowPriority, FcFinePrint, FcStatistics, FcAlarmClock, FcBullish, FcClock, FcBusinessman, FcBusinesswoman } from "react-icons/fc";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts'; // Agrega esta importación junto a las otras de recharts
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts'; // Importación para gráficos de barras
 
-// Define los colores para los gráficos de prioridades
+// Colores para los gráficos de prioridades
 const COLORS = ['#FF6384', '#FFCE56', '#3ba10c'];
 
 const ReportesPage = () => {
+  // Contexto de autenticación para obtener el token
   const { authTokens } = useContext(AuthContext);
+
+  // Estado para almacenar los reportes de pacientes
   const [reportes, setReportes] = useState([]);
+
+  // Estado para agrupar pacientes por prioridad
   const [pacientesPorPrioridad, setPacientesPorPrioridad] = useState({ Alta: [], Media: [], Baja: [] });
+
+  // Estado para controlar la carga de datos
   const [loading, setLoading] = useState(true);
+
+  // Estado para estadísticas globales
   const [estadisticasGenerales, setEstadisticasGenerales] = useState({
     promedioSesionesPorPaciente: 0,
     duracionTotalGlobal: 0,
@@ -22,17 +31,24 @@ const ReportesPage = () => {
     pacienteConMayorDuracion: '',
     distribucionPrioridad: { Alta: 0, Media: 0, Baja: 0 },
   });
-  const [filtroPrioridad, setFiltroPrioridad] = useState(""); // <-- Estado para el filtro de prioridad
-  const [busquedaNombre, setBusquedaNombre] = useState(""); // <-- Añade este estado
 
+  // Estado para el filtro de prioridad en la tabla de prioridad
+  const [filtroPrioridad, setFiltroPrioridad] = useState("");
+
+  // Estado para la búsqueda por nombre en la tabla de sesiones por paciente
+  const [busquedaNombre, setBusquedaNombre] = useState("");
+
+  // Efecto para cargar los datos de pacientes y sesiones al montar el componente
   useEffect(() => {
     const fetchReportes = async () => {
       try {
+        // Solicita la lista de pacientes
         const pacientesRes = await axios.get('http://localhost:8000/api/pacientes/', {
           headers: { Authorization: `Bearer ${authTokens.access}` },
         });
 
         const pacientes = pacientesRes.data;
+        // Agrupa pacientes por prioridad de seguimiento
         const prioridadAgrupada = { Alta: [], Media: [], Baja: [] };
 
         pacientes.forEach((paciente) => {
@@ -47,6 +63,7 @@ const ReportesPage = () => {
 
         setPacientesPorPrioridad(prioridadAgrupada);
 
+        // Variables para estadísticas globales
         let totalDuracionGlobal = 0;
         let totalSesionesGlobal = 0;
         let maxSesiones = -1;
@@ -54,6 +71,7 @@ const ReportesPage = () => {
         let pacienteMaxSesiones = '';
         let pacienteMaxDuracion = '';
 
+        // Obtiene las sesiones de cada paciente y calcula estadísticas individuales
         const dataConEstadisticas = await Promise.all(
           pacientes.map(async (paciente) => {
             const sesionesRes = await axios.get(
@@ -74,11 +92,13 @@ const ReportesPage = () => {
             totalDuracionGlobal += duracionTotal;
             totalSesionesGlobal += totalSesiones;
 
+            // Identifica el paciente con más sesiones
             if (totalSesiones > maxSesiones) {
               maxSesiones = totalSesiones;
               pacienteMaxSesiones = paciente.nombre;
             }
 
+            // Identifica el paciente con mayor duración total
             if (duracionTotal > maxDuracion) {
               maxDuracion = duracionTotal;
               pacienteMaxDuracion = paciente.nombre;
@@ -95,6 +115,7 @@ const ReportesPage = () => {
           })
         );
 
+        // Calcula promedios y porcentajes globales
         const promedioSesionesPorPaciente = pacientes.length > 0
           ? (totalSesionesGlobal / pacientes.length).toFixed(1)
           : 0;
@@ -109,6 +130,7 @@ const ReportesPage = () => {
           Baja: ((prioridadAgrupada.Baja.length / pacientes.length) * 100).toFixed(1),
         };
 
+        // Actualiza el estado con las estadísticas calculadas
         setEstadisticasGenerales({
           promedioSesionesPorPaciente,
           duracionTotalGlobal: totalDuracionGlobal,
@@ -120,6 +142,7 @@ const ReportesPage = () => {
 
         setReportes(dataConEstadisticas);
       } catch (error) {
+        // Manejo de errores en la carga de datos
         console.error('Error al cargar los reportes:', error);
       } finally {
         setLoading(false);
@@ -129,13 +152,14 @@ const ReportesPage = () => {
     fetchReportes();
   }, [authTokens]);
 
-  // Traduce minutos a horas y minutos
+  // Convierte minutos a formato "HH:MM"
   function minutosAHoras(minutos) {
-  const h = Math.floor(minutos / 60).toString().padStart(2, '0');
-  const m = Math.round(minutos % 60).toString().padStart(2, '0');
-  return `${h}:${m}`;
-}
+    const h = Math.floor(minutos / 60).toString().padStart(2, '0');
+    const m = Math.round(minutos % 60).toString().padStart(2, '0');
+    return `${h}:${m}`;
+  }
 
+  // Datos para el gráfico circular de prioridades
   const prioridadData = [
     { name: 'Alta', value: parseFloat(estadisticasGenerales.distribucionPrioridad.Alta) },
     { name: 'Media', value: parseFloat(estadisticasGenerales.distribucionPrioridad.Media) },
@@ -144,6 +168,7 @@ const ReportesPage = () => {
 
   return (
     <div style={{ position: 'relative', height: '100vh', overflow: 'auto' }}>
+      {/* Fondo decorativo */}
       <div
         style={{
           backgroundImage: "url('/Fondo10.png')",
@@ -158,6 +183,7 @@ const ReportesPage = () => {
         }}
       />
       <div className="card p-4 shadow rounded-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)' }}>
+        {/* Encabezado de la página */}
         <div className="d-flex align-items-center mb-4">
           <img src="/LogoReportes.png" alt="Icono de estadísticas" className="mx-auto" style={{ width: '125px', height: '125px' }} />
           <div className="card-body text-center">
@@ -166,17 +192,19 @@ const ReportesPage = () => {
           </div>
         </div>
 
+        {/* Muestra mensaje de carga mientras se obtienen los datos */}
         {loading ? (
           <p className="text-center">Cargando estadísticas...</p>
         ) : (
           <Tab.Container defaultActiveKey="global">
+            {/* Navegación por pestañas */}
             <Nav variant="tabs" className="mb-4 justify-content-center">
               <Nav.Item><Nav.Link eventKey="global">
                 <img src="/LogoGráfico.png" alt="Estadísticas Globales" style={{ width: '20px', height: '20px', marginRight: '8px' }} />
                 Estadísticas Globales</Nav.Link></Nav.Item>
               <Nav.Item><Nav.Link eventKey="tabla">
                 <img src="/LogoReloj.png" alt="Sesiones por Paciente" style={{ width: '20px', height: '20px', marginRight: '8px' }} />
-                      Sesiones por Paciente</Nav.Link></Nav.Item>
+                Sesiones por Paciente</Nav.Link></Nav.Item>
               <Nav.Item><Nav.Link eventKey="grafico">
                 <img src="/LogoGráficoCircular.png" alt="Porcentaje de prioridad" style={{ width: '20px', height: '20px', marginRight: '8px' }} />
                 Porcentaje de prioridad</Nav.Link></Nav.Item>
@@ -186,9 +214,8 @@ const ReportesPage = () => {
             </Nav>
 
             <Tab.Content>
-              {/* GLOBAL */}
+              {/* Pestaña: Estadísticas Globales */}
               <Tab.Pane eventKey="global">
-
                 <div className="d-flex align-items-center mb-4">
                   <img src="/LogoGráfico.png" alt="Icono de estadísticas" className="mx-auto" style={{ width: '125px', height: '125px' }} />
                   <div className="card-body text-center">
@@ -223,7 +250,7 @@ const ReportesPage = () => {
                 </div>
               </Tab.Pane>
 
-              {/* POR PACIENTE */}
+              {/* Pestaña: Tabla de sesiones por paciente */}
               <Tab.Pane eventKey="tabla">
                 <div className="table-responsive mb-4">
                   <div className="d-flex align-items-center mb-4">
@@ -284,7 +311,7 @@ const ReportesPage = () => {
               </div>
             </Tab.Pane>
 
-              {/* GRÁFICOS */}
+              {/* Pestaña: Gráficos de prioridad */}
               <Tab.Pane eventKey="grafico">
                 <div className="mb-4">
                   <div className="d-flex align-items-center mb-4">
@@ -351,7 +378,7 @@ const ReportesPage = () => {
 
               </Tab.Pane>
 
-              {/* TABLA POR PRIORIDAD */}
+              {/* Pestaña: Tabla por prioridad */}
               <Tab.Pane eventKey="prioridad">
                 <div className="table-responsive">
                   <div className="d-flex align-items-center mb-4">

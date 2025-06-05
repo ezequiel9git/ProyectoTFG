@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 
+// Página de registro de nuevos usuarios
 const RegisterPage = () => {
   const navigate = useNavigate();
 
+  // Estado para los datos del formulario de registro
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -12,27 +14,33 @@ const RegisterPage = () => {
     password2: '',
   });
 
+  // Estado para mostrar mensajes de error y éxito
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
+  // Maneja los cambios en los campos del formulario
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Maneja el envío del formulario de registro
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess(false);
 
+    // Valida que las contraseñas coincidan
     if (formData.password !== formData.password2) {
       setError('Las contraseñas no coinciden.');
       return;
     }
 
     try {
+      // Envía la solicitud de registro a la API
       await axios.post('http://localhost:8000/api/register/', formData);
       setSuccess(true);
+      // Redirige al login tras un breve retraso
       setTimeout(() => navigate('/login'), 2000);
     } catch (err) {
       console.error(err.response?.data || err.message);
@@ -54,6 +62,7 @@ const RegisterPage = () => {
         className="bg-white bg-opacity-75 p-5 rounded-4 shadow-lg"
         style={{ maxWidth: '500px', width: '100%' }}
       >
+        {/* Encabezado con logo y mensaje de registro */}
         <div className="text-center mb-4">
           <img
             src="/LogoElysia.png"
@@ -66,6 +75,7 @@ const RegisterPage = () => {
           </p>
         </div>
 
+        {/* Mensaje de éxito o error */}
         {success && (
           <div className="alert alert-success">
             Registro exitoso. Redirigiendo al login...
@@ -73,6 +83,7 @@ const RegisterPage = () => {
         )}
         {error && <div className="alert alert-danger">{error}</div>}
 
+        {/* Formulario de registro */}
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label className="form-label">Nombre de usuario</label>
@@ -127,6 +138,7 @@ const RegisterPage = () => {
           </button>
         </form>
 
+        {/* Enlace para usuarios ya registrados */}
         <div className="text-center mt-3">
           <p className="mb-0">
             ¿Ya tienes una cuenta?{' '}

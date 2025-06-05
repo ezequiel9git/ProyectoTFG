@@ -5,9 +5,15 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FcBusinessman, FcCalendar, FcExpired, FcLike, FcPortraitMode, FcPhone, FcHome, FcHighPriority, FcMediumPriority, FcLowPriority } from "react-icons/fc";
 
+/**
+ * Formulario para crear o editar un paciente.
+ * Permite registrar nuevos pacientes o actualizar los datos de uno existente.
+ */
 const PacienteForm = ({ pacienteEditado, onExito }) => {
+  // Obtiene los tokens de autenticación del contexto
   const { authTokens } = useContext(AuthContext);
 
+  // Estado para los datos del formulario
   const [formData, setFormData] = useState({
     nombre: '',
     edad: '',
@@ -18,9 +24,11 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
     prioridad_seguimiento: 'Media',
   });
 
+  // Estado para mostrar mensajes de error y éxito
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
+  // Actualiza el formulario si se está editando un paciente
   useEffect(() => {
     if (pacienteEditado) {
       setFormData({ ...pacienteEditado });
@@ -37,6 +45,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
     }
   }, [pacienteEditado]);
 
+  // Maneja los cambios en los campos del formulario
   const handleChange = e => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -45,6 +54,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
     }));
   };
 
+  // Maneja el envío del formulario (crear o editar paciente)
   const handleSubmit = async e => {
     e.preventDefault();
     setError(null);
@@ -75,7 +85,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
           prioridad_seguimiento: 'Media',
         });
       }
-      if (onExito) onExito(pacienteEditado ? 'editado' : 'creado'); // <-- Cambia aquí
+      if (onExito) onExito(pacienteEditado ? 'editado' : 'creado');
 
     } catch (err) {
       console.error(err);
@@ -85,17 +95,20 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
 
   return (
     <div className="card p-4 mt-1" style={{ background: "#ffffff", border: "#ffffff" }}>
+      {/* Encabezado del formulario */}
       <div className="d-flex align-items-center mb-4">
         <img src="/AgregarPacientesLogo.png" alt="Icono de agregar pacientes" className="mx-auto" style={{ width: '125px', height: '125px' }} />
-          <div className="card-body text-center">
-            <h4>{pacienteEditado ? 'Editar Paciente' : 'Agregar Paciente'}</h4>
-            <p className="text-muted fst-italic">En este panel puedes agregar un nuevo paciente al registro.</p>
-          </div>
+        <div className="card-body text-center">
+          <h4>{pacienteEditado ? 'Editar Paciente' : 'Agregar Paciente'}</h4>
+          <p className="text-muted fst-italic">En este panel puedes agregar un nuevo paciente al registro.</p>
         </div>
+      </div>
       
+      {/* Mensajes de error y éxito */}
       {error && <div className="alert alert-danger">{error}</div>}
       {success && <div className="alert alert-success">{success}</div>}
 
+      {/* Formulario de paciente */}
       <form onSubmit={handleSubmit}>
         <div className="mb-2">
           <h6><FcBusinessman style={{marginRight: 6}} /> Nombre</h6>
@@ -166,21 +179,21 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
         </div>
         <div className="mb-3">
           <h6><FcExpired style={{marginRight: 6}} /> Prioridad de seguimiento</h6>
-            <select
-                name="prioridad_seguimiento"
-                className="form-select"
-                style={{
-                  color:
-                    formData.prioridad_seguimiento === 'Alta'
-                      ? '#dc3545' // rojo
-                      : formData.prioridad_seguimiento === 'Media'
-                      ? '#ecb716' // amarillo
-                      : '#6c757d', // gris para baja
-                  fontWeight: 'bold',
-                }}
-                value={formData.prioridad_seguimiento}
-                onChange={handleChange}
-              >
+          <select
+            name="prioridad_seguimiento"
+            className="form-select"
+            style={{
+              color:
+                formData.prioridad_seguimiento === 'Alta'
+                  ? '#dc3545' // rojo
+                  : formData.prioridad_seguimiento === 'Media'
+                  ? '#ecb716' // amarillo
+                  : '#6c757d', // gris para baja
+              fontWeight: 'bold',
+            }}
+            value={formData.prioridad_seguimiento}
+            onChange={handleChange}
+          >
             <option value="Alta">
               {/* Icono para Alta */}
               &#8203; {/* invisible char para evitar warning */}
@@ -213,6 +226,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
           )}
         </div>
       </form>
+      {/* Contenedor para mensajes toast */}
       <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );

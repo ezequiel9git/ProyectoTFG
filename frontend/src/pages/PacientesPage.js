@@ -2,19 +2,26 @@ import React, { useState } from 'react';
 import PacienteForm from '../components/PacienteForm';
 import PacienteList from '../components/PacienteList';
 
+// Página principal para la gestión de pacientes
 const PacientesPage = () => {
+  // Estado para el paciente que se está editando (null si no hay ninguno)
   const [pacienteEditado, setPacienteEditado] = useState(null);
+  // Estado para forzar la recarga de la lista de pacientes tras crear/editar
   const [recargarLista, setRecargarLista] = useState(false);
+  // Estado para controlar la pestaña activa ('lista' o 'formulario')
   const [activeTab, setActiveTab] = useState('lista');
-  const [toastMensaje, setToastMensaje] = useState(null); // NUEVO
+  // Estado para mostrar mensajes tipo toast tras acciones exitosas
+  const [toastMensaje, setToastMensaje] = useState(null);
 
+  // Maneja la selección de un paciente para editar
   const handleEditar = (paciente) => {
     setPacienteEditado(paciente);
     setActiveTab('formulario'); // Cambia automáticamente a la pestaña de formulario
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Cambia la firma para recibir el tipo de acción
+  // Maneja el éxito del formulario (creación o edición)
+  // Cambia la pestaña, recarga la lista y muestra un mensaje
   const handleFormularioExito = (accion) => {
     setPacienteEditado(null);
     setRecargarLista(prev => !prev);
@@ -25,6 +32,7 @@ const PacientesPage = () => {
 
   return (
     <div style={{ position: 'relative', height: '100vh', overflow: 'auto' }}>
+      {/* Fondo decorativo */}
       <div
         style={{
           backgroundImage: "url('/Fondo8.png')",
@@ -40,15 +48,16 @@ const PacientesPage = () => {
       />
 
       <div className="card p-4 shadow rounded-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
-        
-      <div className="d-flex align-items-center mb-1">
-        <img src="/ListaPacientesLogo.png" alt="Icono de pacientes" className="mx-auto" style={{ width: '125px', height: '125px' }} />
+        {/* Encabezado de la página */}
+        <div className="d-flex align-items-center mb-1">
+          <img src="/ListaPacientesLogo.png" alt="Icono de pacientes" className="mx-auto" style={{ width: '125px', height: '125px' }} />
           <div style={{ textAlign: "center" }} className="card-body">
             <h2 className="card-title text-primary">Registro de pacientes</h2><br></br>
             <p className="text-muted fst-italic">Consulta la información de tus pacientes y registra nuevos.</p>
           </div>
-      </div>
+        </div>
 
+        {/* Navegación por pestañas */}
         <ul className="nav nav-tabs mb-4 justify-content-center">
           <li className="nav-item">
             <button
@@ -70,6 +79,7 @@ const PacientesPage = () => {
           </li>
         </ul>
 
+        {/* Contenido de la pestaña activa */}
         <div className="card p-4 shadow rounded-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', border: "2px solid #fd8ed3" }}>
           {activeTab === 'lista' && (
             <PacienteList

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { motion } from 'framer-motion';
 
+// Variantes de animación para las tarjetas del dashboard
 const cardVariants = {
   hidden: { opacity: 0, y: 60 },
   visible: (i) => ({
@@ -13,9 +14,11 @@ const cardVariants = {
 };
 
 const Dashboard = () => {
+  // Obtiene el usuario y la función de logout del contexto de autenticación
   const { user, logoutUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  // Maneja el cierre de sesión y redirige al login
   const handleLogout = () => {
     logoutUser();
     navigate('/login');
@@ -23,6 +26,7 @@ const Dashboard = () => {
 
   return (
     <div style={{ position: 'relative', height: '100vh', overflow: 'hidden' }}>
+      {/* Fondo decorativo fijo */}
       <div
         style={{
           backgroundImage: "url('/Fondo2.png')",
@@ -37,12 +41,14 @@ const Dashboard = () => {
         }}
       />
       <div className="container py-5">
+        {/* Contenedor principal animado */}
         <motion.div
           className="container bg-white bg-opacity-75 rounded-4 shadow p-5"
           initial={{ opacity: 0, scale: 0.97 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7, ease: 'easeOut' }}
         >
+          {/* Encabezado con logo y bienvenida */}
           <motion.div
             className="d-flex align-items-center mb-4"
             initial={{ opacity: 0, y: -40 }}
@@ -65,6 +71,7 @@ const Dashboard = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.5 }}
               >
+                {/* Mensaje de bienvenida personalizado */}
                 Continúa alumbrando al mundo, {user && user.username}
               </motion.h2>
               <p></p>
@@ -80,8 +87,9 @@ const Dashboard = () => {
             </div>
           </motion.div>
 
+          {/* Tarjetas de navegación principales */}
           <div className="row g-4">
-            {/* Pacientes */}
+            {/* Tarjeta: Pacientes y sesiones */}
             <motion.div
               className="col-md-4"
               custom={0}
@@ -120,7 +128,7 @@ const Dashboard = () => {
               </motion.div>
             </motion.div>
 
-            {/* Reportes */}
+            {/* Tarjeta: Estadísticas */}
             <motion.div
               className="col-md-4"
               custom={1}
@@ -159,7 +167,7 @@ const Dashboard = () => {
               </motion.div>
             </motion.div>
 
-            {/* Agenda */}
+            {/* Tarjeta: Agenda */}
             <motion.div
               className="col-md-4"
               custom={2}

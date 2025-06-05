@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+// Variantes de animación para las tarjetas de sesión
 const cardVariants = {
   hidden: { opacity: 0, y: 60, scale: 0.97 },
   visible: (i) => ({
@@ -18,12 +19,21 @@ const cardVariants = {
   exit: { opacity: 0, y: 60, scale: 0.97, transition: { duration: 0.3 } }
 };
 
+/**
+ * Lista de sesiones de un paciente.
+ * Permite consultar, editar y eliminar sesiones.
+ */
 const SesionList = ({ pacienteId, onEditarSesion, onSesionEliminada, toastMensaje, limpiarToastMensaje }) => {
+  // Obtiene los tokens de autenticación del contexto
   const { authTokens } = useContext(AuthContext);
+  // Estado para la lista de sesiones
   const [sesiones, setSesiones] = useState([]);
+  // Estado para controlar la carga de datos
   const [loading, setLoading] = useState(true);
+  // Estado para mostrar errores de carga
   const [error, setError] = useState(null);
 
+  // Obtiene las sesiones del paciente desde la API
   const fetchSesiones = async () => {
     setLoading(true);
     setError(null);
@@ -36,6 +46,7 @@ const SesionList = ({ pacienteId, onEditarSesion, onSesionEliminada, toastMensaj
           },
         }
       );
+      // Ordena las sesiones por fecha descendente
       const ordenadas = response.data.sort(
         (a, b) => new Date(b.fecha) - new Date(a.fecha)
       );
@@ -48,6 +59,7 @@ const SesionList = ({ pacienteId, onEditarSesion, onSesionEliminada, toastMensaj
     }
   };
 
+  // Elimina una sesión por su ID
   const handleEliminar = async (id) => {
     if (window.confirm('¿Estás seguro de eliminar esta sesión?')) {
       try {
@@ -65,25 +77,27 @@ const SesionList = ({ pacienteId, onEditarSesion, onSesionEliminada, toastMensaj
     }
   };
 
-  // Función que traduce el formato de fecha  
+  // Formatea una fecha ISO a formato legible en español
   const formatearFecha = (fechaISO) => {
-        if (!fechaISO) return '';
-        const meses = [
-          'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
-          'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
-        ];
-        const [a, m, d] = fechaISO.split('-');
-        const dia = parseInt(d, 10);
-        const mes = meses[parseInt(m, 10) - 1];
-        return `${dia} de ${mes} de ${a}`;
-      };
+    if (!fechaISO) return '';
+    const meses = [
+      'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+      'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+    ];
+    const [a, m, d] = fechaISO.split('-');
+    const dia = parseInt(d, 10);
+    const mes = meses[parseInt(m, 10) - 1];
+    return `${dia} de ${mes} de ${a}`;
+  };
 
+  // Carga las sesiones al montar el componente o cambiar el pacienteId
   useEffect(() => {
     if (pacienteId) {
       fetchSesiones();
     }
   }, [pacienteId]);
 
+  // Muestra un toast si hay mensaje y lo limpia después
   useEffect(() => {
     if (toastMensaje) {
       toast.success(toastMensaje);
@@ -91,6 +105,7 @@ const SesionList = ({ pacienteId, onEditarSesion, onSesionEliminada, toastMensaj
     }
   }, [toastMensaje, limpiarToastMensaje]);
 
+  // Muestra spinner de carga
   if (loading) return (
     <motion.div
       className="d-flex justify-content-center align-items-center"
@@ -112,6 +127,7 @@ const SesionList = ({ pacienteId, onEditarSesion, onSesionEliminada, toastMensaj
     </motion.div>
   );
 
+  // Muestra mensaje de error si ocurre un problema al cargar
   if (error) {
     return (
       <motion.div
@@ -125,18 +141,25 @@ const SesionList = ({ pacienteId, onEditarSesion, onSesionEliminada, toastMensaj
     );
   }
 
+  // Muestra mensaje si no hay sesiones registradas
   if (sesiones.length === 0) {
     return (
-      <motion.p
+      <motion.div
+        className="d-flex flex-column justify-content-center align-items-center"
+        style={{ minHeight: "60vh" }}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        No hay sesiones registradas.
-      </motion.p>
+        <h5 className="mb-2">No hay sesiones registradas</h5>
+        <p className="text-muted" style={{ fontStyle: "italic" }}>
+          Puedes registrar una nueva sesión haciendo clic en el botón "Registrar sesión".
+        </p>
+      </motion.div>
     );
   }
 
+  // Renderiza la lista de sesiones
   return (
     <>
       <motion.div
@@ -216,6 +239,7 @@ const SesionList = ({ pacienteId, onEditarSesion, onSesionEliminada, toastMensaj
           ))}
         </AnimatePresence>
       </motion.div>
+      {/* Contenedor para mensajes toast */}
       <ToastContainer position="top-right" autoClose={3000} />
     </>
   );

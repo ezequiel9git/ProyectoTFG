@@ -3,46 +3,59 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
- import esLocale from '@fullcalendar/core/locales/es';
+import esLocale from '@fullcalendar/core/locales/es';
 import axios from 'axios';
 import Modal from 'react-modal';
 import AuthContext from '../context/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import CitaFormModal from '../components/CitaFormModal';
+import CitaEditModal from '../components/CitaEditModal';
 
+// Configura el elemento raíz para los modales de React
 Modal.setAppElement('#root');
 
 const AgendaPage = () => {
+  // Obtiene el token de autenticación del contexto
   const { authTokens } = useContext(AuthContext);
-  const [citas, setCitas] = useState([]);
-  const [pacientes, setPacientes] = useState([]);
-  const [modalEditOpen, setModalEditOpen] = useState(false);
-  const [modalCreateOpen, setModalCreateOpen] = useState(false);
-  const [citaSeleccionada, setCitaSeleccionada] = useState(null);
-  const [nuevaCita, setNuevaCita] = useState({
-    paciente: '',
-    descripcion: '',
-    fecha_inicio: '',
-    fecha_fin: '',
-  });
 
+  // Estado para almacenar las citas del calendario
+  const [citas, setCitas] = useState([]);
+  // Estado para la lista de pacientes (para seleccionar en el formulario)
+  const [pacientes, setPacientes] = useState([]);
+  // Estado para controlar la visibilidad del modal de edición
+  const [modalEditOpen, setModalEditOpen] = useState(false);
+  // Estado para controlar la visibilidad del modal de creación
+  const [modalCreateOpen, setModalCreateOpen] = useState(false);
+  // Estado para la cita seleccionada (al editar)
+  const [citaSeleccionada, setCitaSeleccionada] = useState(null);
+  
+  // Estado para la fecha seleccionada al crear cita
+  const [fechaSeleccionada, setFechaSeleccionada] = useState('');
+
+  // Carga inicial de citas y pacientes al montar el componente
   useEffect(() => {
     fetchCitas();
     fetchPacientes();
   }, []);
 
+  // Obtiene las citas desde la API y las adapta para FullCalendar
   const fetchCitas = async () => {
     try {
       const response = await axios.get('http://localhost:8000/api/citas/', {
         headers: { Authorization: `Bearer ${authTokens.access}` },
       });
 
+      // Mapea las citas para el formato de FullCalendar
       const eventos = response.data.map(cita => ({
         id: cita.id,
         title: cita.paciente_nombre || 'Cita',
         start: cita.fecha_inicio,
         end: cita.fecha_fin,
-        extendedProps: { descripcion: cita.descripcion },
+        extendedProps: { 
+          descripcion: cita.descripcion,
+          paciente: cita.paciente // <-- Añade esto
+        },
       }));
 
       setCitas(eventos);
@@ -51,6 +64,7 @@ const AgendaPage = () => {
     }
   };
 
+  // Obtiene la lista de pacientes para el selector del formulario
   const fetchPacientes = async () => {
     try {
       const response = await axios.get('http://localhost:8000/api/pacientes/', {
@@ -62,37 +76,31 @@ const AgendaPage = () => {
     }
   };
 
+  // Maneja el clic en una fecha vacía del calendario para crear una cita
   const handleDateClick = (info) => {
-    const fecha = info.dateStr;
-    setNuevaCita({
-      paciente: '',
-      descripcion: '',
-      fecha_inicio: `${fecha}T09:00`,
-      fecha_fin: `${fecha}T10:00`,
-    });
+    setFechaSeleccionada(info.dateStr);
     setModalCreateOpen(true);
   };
 
+  // Maneja el clic en un evento existente para editarlo
   const handleEventClick = (info) => {
     const event = info.event;
     setCitaSeleccionada({
       id: event.id,
-      title: event.title,
-      start: event.startStr,
-      end: event.endStr,
+      paciente: event.extendedProps.paciente || '', // Asegúrate de que el paciente esté en extendedProps
+      fecha_inicio: event.startStr,
+      fecha_fin: event.endStr,
       descripcion: event.extendedProps.descripcion || '',
+      title: event.title,
     });
     setModalEditOpen(true);
   };
 
-  const handleChangeNuevaCita = (e) => {
-    const { name, value } = e.target;
-    setNuevaCita(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleCrearCita = async () => {
+  
+  // Envía la solicitud para crear una nueva cita
+  const handleCrearCita = async (formData) => {
     try {
-      await axios.post('http://localhost:8000/api/citas/', nuevaCita, {
+      await axios.post('http://localhost:8000/api/citas/', formData, {
         headers: { Authorization: `Bearer ${authTokens.access}` },
       });
       toast.success('Cita creada correctamente');
@@ -103,13 +111,10 @@ const AgendaPage = () => {
     }
   };
 
-  const handleGuardarCambios = async () => {
+  // Guarda los cambios realizados en una cita existente
+  const handleGuardarCambios = async (formData) => {
     try {
-      await axios.put(`http://localhost:8000/api/citas/${citaSeleccionada.id}/`, {
-        descripcion: citaSeleccionada.descripcion,
-        fecha_inicio: citaSeleccionada.start,
-        fecha_fin: citaSeleccionada.end,
-      }, {
+      await axios.put(`http://localhost:8000/api/citas/${citaSeleccionada.id}/`, formData, {
         headers: { Authorization: `Bearer ${authTokens.access}` },
       });
       toast.success('Cita actualizada correctamente');
@@ -120,6 +125,7 @@ const AgendaPage = () => {
     }
   };
 
+  // Elimina la cita seleccionada
   const handleEliminarCita = async () => {
     try {
       await axios.delete(`http://localhost:8000/api/citas/${citaSeleccionada.id}/`, {
@@ -133,6 +139,7 @@ const AgendaPage = () => {
     }
   };
 
+  // Estilos personalizados para los modales
   const modalStyles = {
     content: {
       backgroundColor: '#fff',
@@ -151,6 +158,7 @@ const AgendaPage = () => {
 
   return (
     <div style={{ position: 'relative', height: '100vh', overflow: 'auto' }}>
+      {/* Fondo decorativo */}
       <div
         style={{
           backgroundImage: "url('/Fondo14.png')",
@@ -166,15 +174,17 @@ const AgendaPage = () => {
       />
       <ToastContainer />
       <div className="card p-4 shadow rounded-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', border: "2px solid #9acafa", borderRadius: "1.5rem" }}>
-      <div className="d-flex align-items-center mb-4">
-        <img src="/Logo9.png" alt="Icono de agenda" className="mx-auto" style={{ width: '125px', height: '125px' }} />
+        {/* Encabezado de la página */}
+        <div className="d-flex align-items-center mb-4">
+          <img src="/Logo9.png" alt="Icono de agenda" className="mx-auto" style={{ width: '125px', height: '125px' }} />
           <div className="card-body text-center">
-            <h2 className="card-title text-primary">Agenda</h2><br></br>
+            <h2 className="card-title text-primary">Agenda</h2><br />
             <p className="text-muted fst-italic">Administra tus citas programadas con facilidad.</p>
             <p className="text-muted fst-italic">Pulsa sobre una casilla del calendario para agregar un cita, o sobre una cita para operar con ella.</p>
           </div>
-      </div>
+        </div>
 
+        {/* Calendario principal */}
         <div className="card p-3 border-0 shadow-sm" >
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -193,77 +203,24 @@ const AgendaPage = () => {
         </div>
       </div>
 
-      {/* Modales: Crear y Editar */}
-      <Modal isOpen={modalCreateOpen} onRequestClose={() => setModalCreateOpen(false)} style={modalStyles}>
-        <h5>Nueva Cita</h5>
-        <div className="mb-2">
-          <label>Paciente</label>
-          <select className="form-control" name="paciente" value={nuevaCita.paciente} onChange={handleChangeNuevaCita}>
-            <option value="">Seleccione un paciente</option>
-            {pacientes.map(p => (
-              <option key={p.id} value={p.id}>{p.nombre}</option>
-            ))}
-          </select>
-        </div>
-        <div className="mb-2">
-          <label>Descripción</label>
-          <textarea className="form-control" name="descripcion" value={nuevaCita.descripcion} onChange={handleChangeNuevaCita} />
-        </div>
-        <div className="mb-2">
-          <label>Fecha inicio</label>
-          <input type="datetime-local" name="fecha_inicio" className="form-control" value={nuevaCita.fecha_inicio} onChange={handleChangeNuevaCita} />
-        </div>
-        <div className="mb-2">
-          <label>Fecha fin</label>
-          <input type="datetime-local" name="fecha_fin" className="form-control" value={nuevaCita.fecha_fin} onChange={handleChangeNuevaCita} />
-        </div>
-        <div className="d-flex justify-content-between mt-4">
-          <button className="btn btn-success" onClick={handleCrearCita}>Crear Cita</button>
-          <button className="btn btn-secondary" onClick={() => setModalCreateOpen(false)}>Cancelar</button>
-        </div>
-      </Modal>
+      {/* Modal para crear nueva cita */}
+      <CitaFormModal
+        show={modalCreateOpen}
+        onHide={() => setModalCreateOpen(false)}
+        onSubmit={handleCrearCita}
+        pacientes={pacientes}
+        fechaInicial={fechaSeleccionada}
+      />
 
-      <Modal isOpen={modalEditOpen} onRequestClose={() => setModalEditOpen(false)} style={modalStyles}>
-        <h5 className="mb-3">Editar Cita</h5>
-        {citaSeleccionada && (
-          <>
-            <p><strong>Paciente:</strong> {citaSeleccionada.title}</p>
-            <div className="mb-2">
-              <label>Descripción</label>
-              <textarea
-                className="form-control"
-                name="descripcion"
-                value={citaSeleccionada.descripcion}
-                onChange={e => setCitaSeleccionada(prev => ({ ...prev, descripcion: e.target.value }))}
-              />
-            </div>
-            <div className="mb-2">
-              <label>Fecha inicio</label>
-              <input
-                type="datetime-local"
-                name="start"
-                className="form-control"
-                value={citaSeleccionada.start.slice(0, 16)}
-                onChange={e => setCitaSeleccionada(prev => ({ ...prev, start: e.target.value }))}
-              />
-            </div>
-            <div className="mb-2">
-              <label>Fecha fin</label>
-              <input
-                type="datetime-local"
-                name="end"
-                className="form-control"
-                value={citaSeleccionada.end.slice(0, 16)}
-                onChange={e => setCitaSeleccionada(prev => ({ ...prev, end: e.target.value }))}
-              />
-            </div>
-            <div className="d-flex justify-content-between mt-4">
-              <button className="btn btn-success" onClick={handleGuardarCambios}>Guardar Cambios</button>
-              <button className="btn btn-danger" onClick={handleEliminarCita}>Eliminar Cita</button>
-            </div>
-          </>
-        )}
-      </Modal>
+      {/* Modal para editar o eliminar cita existente */}
+      <CitaEditModal
+        show={modalEditOpen}
+        onHide={() => setModalEditOpen(false)}
+        onSave={handleGuardarCambios}
+        onDelete={handleEliminarCita}
+        cita={citaSeleccionada}
+        pacientes={pacientes}
+      />
     </div>
   );
 };

@@ -5,10 +5,15 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FcCalendar, FcAlarmClock, FcMindMap, FcIdea, FcTodoList, FcCheckmark, FcSurvey, FcLowPriority } from "react-icons/fc";
 
-
+/**
+ * Formulario para registrar o editar una sesión de un paciente.
+ * Permite crear nuevas sesiones o editar una existente.
+ */
 const SesionForm = ({ pacienteId, onSesionCreada, sesionEditada, onFinalizarEdicion }) => {
+  // Obtiene los tokens de autenticación del contexto
   const { authTokens } = useContext(AuthContext);
 
+  // Estado para los datos del formulario de sesión
   const [formData, setFormData] = useState({
     fecha: '',
     duracion: '',
@@ -20,15 +25,19 @@ const SesionForm = ({ pacienteId, onSesionCreada, sesionEditada, onFinalizarEdic
     seguimiento: '',
   });
 
+  // Actualiza el formulario si se está editando una sesión
   useEffect(() => {
     if (sesionEditada) {
       setFormData(sesionEditada);
     }
   }, [sesionEditada]);
 
+  // Estado para mostrar errores en el formulario
   const [error, setError] = useState(null);
+  // Determina si el formulario está en modo edición
   const modoEdicion = Boolean(sesionEditada);
 
+  // Maneja el envío del formulario (crear o editar sesión)
   const handleSubmit = async e => {
     e.preventDefault();
     setError(null);
@@ -54,6 +63,7 @@ const SesionForm = ({ pacienteId, onSesionCreada, sesionEditada, onFinalizarEdic
       if (onSesionCreada) onSesionCreada(modoEdicion ? 'editada' : 'creada');
       if (modoEdicion && onFinalizarEdicion) onFinalizarEdicion();
 
+      // Limpia el formulario tras guardar
       setFormData({
         fecha: '',
         duracion: '',
@@ -71,6 +81,7 @@ const SesionForm = ({ pacienteId, onSesionCreada, sesionEditada, onFinalizarEdic
     }
   };
 
+  // Maneja los cambios en los campos del formulario
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -81,6 +92,7 @@ const SesionForm = ({ pacienteId, onSesionCreada, sesionEditada, onFinalizarEdic
  
   return (
      <div className="card p-4 mt-1" style={{ background: "#ffffff", border: "2px solid #fdc89c" }}>
+      {/* Encabezado del formulario */}
       <div className="d-flex align-items-center mb-4">
         <img src="/AgregarSesionesLogo.png" alt="Icono de agregar sesiones" className="mx-auto" style={{ width: '125px', height: '125px' }} />
           <div className="card-body text-center">
@@ -89,8 +101,10 @@ const SesionForm = ({ pacienteId, onSesionCreada, sesionEditada, onFinalizarEdic
           </div>
         </div>  
       
+      {/* Mensaje de error si existe */}
       {error && <div className="alert alert-danger">{error}</div>}
 
+      {/* Formulario de sesión */}
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <h6><FcCalendar style={{marginRight: 6}} /> Fecha</h6>          
@@ -136,6 +150,7 @@ const SesionForm = ({ pacienteId, onSesionCreada, sesionEditada, onFinalizarEdic
         )}
       </form>
 
+      {/* Contenedor para mensajes toast */}
       <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
