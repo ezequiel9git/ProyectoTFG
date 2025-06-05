@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { FcHighPriority, FcMediumPriority, FcLowPriority, FcFinePrint } from "react-icons/fc";
 import { motion, AnimatePresence } from 'framer-motion'; // Añadido
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const rowVariants = {
   hidden: { opacity: 0, y: 30 },
@@ -15,13 +17,21 @@ const rowVariants = {
   exit: { opacity: 0, y: 30, transition: { duration: 0.3 } }
 };
 
-const PacienteList = ({ onEditarPaciente, recargarTrigger }) => {
+const PacienteList = ({ onEditarPaciente, recargarTrigger, toastMensaje, limpiarToastMensaje }) => {
   const { authTokens } = useContext(AuthContext);
   const [pacientes, setPacientes] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [busqueda, setBusqueda] = useState(""); // Nuevo estado para búsqueda
-  const [prioridadFiltro, setPrioridadFiltro] = useState(""); // Nuevo estado para prioridad
+  const [busqueda, setBusqueda] = useState("");
+  const [prioridadFiltro, setPrioridadFiltro] = useState("");
+
+  // Mostrar toast si viene mensaje desde el padre (crear/editar)
+  useEffect(() => {
+    if (toastMensaje) {
+      toast.success(toastMensaje);
+      if (limpiarToastMensaje) limpiarToastMensaje();
+    }
+  }, [toastMensaje, limpiarToastMensaje]);
 
   const fetchPacientes = async () => {
     setLoading(true);
@@ -36,6 +46,7 @@ const PacienteList = ({ onEditarPaciente, recargarTrigger }) => {
     } catch (err) {
       console.error(err);
       setError('Error al cargar pacientes.');
+      toast.error('Error al cargar pacientes.');
     }
     setLoading(false);
   };
@@ -47,9 +58,10 @@ const PacienteList = ({ onEditarPaciente, recargarTrigger }) => {
           headers: { Authorization: `Bearer ${authTokens.access}` },
         });
         setPacientes(prev => prev.filter(p => p.id !== id));
+        toast.success('Paciente eliminado correctamente.');
       } catch (err) {
         console.error(err);
-        alert('Error al eliminar el paciente.');
+        toast.error('Error al eliminar el paciente.');
       }
     }
   };
@@ -237,6 +249,7 @@ const PacienteList = ({ onEditarPaciente, recargarTrigger }) => {
           </table>
         </div>
       )}
+      <ToastContainer position="top-right" autoClose={3000} />
     </motion.div>
   );
 };

@@ -2,15 +2,20 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import SesionForm from '../components/SesionForm';
 import SesionList from '../components/SesionList';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SesionesPage = () => {
   const { pacienteId } = useParams();
   const [sesionEditada, setSesionEditada] = useState(null);
   const [activeTab, setActiveTab] = useState('lista');
+  const [toastMensaje, setToastMensaje] = useState(null);
 
-  const handleSesionCreada = () => {
+  const handleSesionCreada = (accion) => {
     setSesionEditada(null);
     setActiveTab('lista');
+    if (accion === 'creada') setToastMensaje('Sesión creada con éxito.');
+    if (accion === 'editada') setToastMensaje('Sesión editada con éxito.');
   };
 
   const handleEditarSesion = (sesion) => {
@@ -21,6 +26,10 @@ const SesionesPage = () => {
 
   const cancelarEdicion = () => {
     setSesionEditada(null);
+  };
+
+  const handleToastEliminada = () => {
+    setToastMensaje('Sesión eliminada con éxito.');
   };
 
   return (
@@ -74,6 +83,9 @@ const SesionesPage = () => {
               <SesionList
                 pacienteId={pacienteId}
                 onEditarSesion={handleEditarSesion}
+                onSesionEliminada={handleToastEliminada}
+                toastMensaje={toastMensaje}
+                limpiarToastMensaje={() => setToastMensaje(null)}
               />
             )}
 
@@ -92,6 +104,7 @@ const SesionesPage = () => {
           </div>
         )}
       </div>
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 };

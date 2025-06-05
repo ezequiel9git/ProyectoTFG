@@ -29,14 +29,6 @@ const SesionForm = ({ pacienteId, onSesionCreada, sesionEditada, onFinalizarEdic
   const [error, setError] = useState(null);
   const modoEdicion = Boolean(sesionEditada);
 
-  const handleChange = e => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
   const handleSubmit = async e => {
     e.preventDefault();
     setError(null);
@@ -58,7 +50,9 @@ const SesionForm = ({ pacienteId, onSesionCreada, sesionEditada, onFinalizarEdic
         },
       });
 
-      toast.success(modoEdicion ? 'Sesión actualizada ✅' : 'Sesión creada 🎉');
+      // El toast se muestra en el padre, así que aquí solo avisamos
+      if (onSesionCreada) onSesionCreada(modoEdicion ? 'editada' : 'creada');
+      if (modoEdicion && onFinalizarEdicion) onFinalizarEdicion();
 
       setFormData({
         fecha: '',
@@ -71,13 +65,18 @@ const SesionForm = ({ pacienteId, onSesionCreada, sesionEditada, onFinalizarEdic
         seguimiento: '',
       });
 
-      if (onSesionCreada) onSesionCreada(response.data);
-      if (modoEdicion && onFinalizarEdicion) onFinalizarEdicion();
-
     } catch (err) {
       setError('Error al guardar la sesión. Verifica los campos.');
       console.error(err);
     }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
   };
  
   return (

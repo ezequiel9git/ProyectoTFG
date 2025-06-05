@@ -75,7 +75,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
           prioridad_seguimiento: 'Media',
         });
       }
-      if (onExito) onExito();
+      if (onExito) onExito(pacienteEditado ? 'editado' : 'creado'); // <-- Cambia aquí
 
     } catch (err) {
       console.error(err);
@@ -206,7 +206,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
             <button
               type="button"
               className="btn btn-secondary"
-              onClick={() => onExito && onExito()}
+              onClick={() => onExito && onExito()} // Puedes dejarlo así para cancelar
             >
               Cancelar edición
             </button>

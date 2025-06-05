@@ -6,6 +6,7 @@ const PacientesPage = () => {
   const [pacienteEditado, setPacienteEditado] = useState(null);
   const [recargarLista, setRecargarLista] = useState(false);
   const [activeTab, setActiveTab] = useState('lista');
+  const [toastMensaje, setToastMensaje] = useState(null); // NUEVO
 
   const handleEditar = (paciente) => {
     setPacienteEditado(paciente);
@@ -13,10 +14,13 @@ const PacientesPage = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleFormularioExito = () => {
+  // Cambia la firma para recibir el tipo de acción
+  const handleFormularioExito = (accion) => {
     setPacienteEditado(null);
     setRecargarLista(prev => !prev);
     setActiveTab('lista'); // Vuelve a la pestaña de lista tras guardar
+    if (accion === 'creado') setToastMensaje('Paciente creado con éxito.');
+    if (accion === 'editado') setToastMensaje('Paciente editado con éxito.');
   };
 
   return (
@@ -68,11 +72,19 @@ const PacientesPage = () => {
 
         <div className="card p-4 shadow rounded-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', border: "2px solid #fd8ed3" }}>
           {activeTab === 'lista' && (
-            <PacienteList onEditarPaciente={handleEditar} recargarTrigger={recargarLista} />
+            <PacienteList
+              onEditarPaciente={handleEditar}
+              recargarTrigger={recargarLista}
+              toastMensaje={toastMensaje}
+              limpiarToastMensaje={() => setToastMensaje(null)}
+            />
           )}
 
           {activeTab === 'formulario' && (
-            <PacienteForm pacienteEditado={pacienteEditado} onExito={handleFormularioExito} />
+            <PacienteForm
+              pacienteEditado={pacienteEditado}
+              onExito={handleFormularioExito}
+            />
           )}
         </div>
       </div>
