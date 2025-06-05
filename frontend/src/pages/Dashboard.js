@@ -65,7 +65,7 @@ const Dashboard = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.5 }}
               >
-                Bienvenido, {user && user.username}
+                Continúa alumbrando al mundo, {user && user.username}
               </motion.h2>
               <p></p>
               <motion.p

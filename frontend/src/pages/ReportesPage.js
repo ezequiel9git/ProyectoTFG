@@ -3,7 +3,7 @@ import axios from 'axios';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import AuthContext from '../context/AuthContext';
 import { Tab, Nav } from 'react-bootstrap';
-import { FcHighPriority, FcMediumPriority, FcLowPriority, FcStatistics, FcAlarmClock, FcBullish, FcClock, FcBusinessman, FcBusinesswoman } from "react-icons/fc";
+import { FcHighPriority, FcMediumPriority, FcLowPriority, FcFinePrint, FcStatistics, FcAlarmClock, FcBullish, FcClock, FcBusinessman, FcBusinesswoman } from "react-icons/fc";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts'; // Agrega esta importación junto a las otras de recharts
 
 // Define los colores para los gráficos de prioridades
@@ -23,6 +23,7 @@ const ReportesPage = () => {
     distribucionPrioridad: { Alta: 0, Media: 0, Baja: 0 },
   });
   const [filtroPrioridad, setFiltroPrioridad] = useState(""); // <-- Estado para el filtro de prioridad
+  const [busquedaNombre, setBusquedaNombre] = useState(""); // <-- Añade este estado
 
   useEffect(() => {
     const fetchReportes = async () => {
@@ -232,22 +233,42 @@ const ReportesPage = () => {
                     <p className="text-muted fst-italic">Esta tabla te ayudará a comprender mejor el tiempo acaparado de sesiones de tus pacientes.</p>
                   </div>
                 </div>
-                  <table className="table table-bordered table-hover">
-                    <thead className="table-light">
-                      <tr>
-                        <th style={{ backgroundColor: '#70041b', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Nombre del paciente</th>
-                        <th style={{ backgroundColor: '#380694', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Nº de sesiones</th>
-                        <th style={{ backgroundColor: '#380694', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Duración total<br></br> (Hora : Min)</th>
-                        <th style={{ backgroundColor: '#380694', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Duración promedio<br></br> (Hora : Min)</th>
-                        <th style={{ backgroundColor: '#380694', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Sesión más larga<br></br> (Hora : Min)</th>
-                        <th style={{ backgroundColor: '#380694', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Sesión más breve<br></br> (Hora : Min)</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {reportes.length === 0 ? (
-                        <tr><td colSpan="4" className="text-center">No hay datos disponibles.</td></tr>
-                      ) : (
-                        reportes.map((r, index) => (
+                {/* Campo de búsqueda por nombre */}
+                <div className="mb-3" style={{ maxWidth: 350 }}>
+                  <label htmlFor="busquedaNombre" className="form-label fw-semibold">
+                    <FcFinePrint style={{ marginRight: 6 }} /> Filtrar por nombre de paciente
+                  </label>
+                  <input
+                    id="busquedaNombre"
+                    type="text"
+                    className="form-control"
+                    placeholder="Introduce el nombre del paciente..."
+                    value={busquedaNombre}
+                    onChange={e => setBusquedaNombre(e.target.value)}
+                  />
+                </div>
+                <table className="table table-bordered table-hover">
+                  <thead className="table-light">
+                    <tr>
+                      <th style={{ backgroundColor: '#70041b', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Nombre del paciente</th>
+                      <th style={{ backgroundColor: '#380694', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Nº de sesiones</th>
+                      <th style={{ backgroundColor: '#380694', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Duración total<br></br> (Hora : Min)</th>
+                      <th style={{ backgroundColor: '#380694', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Duración promedio<br></br> (Hora : Min)</th>
+                      <th style={{ backgroundColor: '#380694', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Sesión más larga<br></br> (Hora : Min)</th>
+                      <th style={{ backgroundColor: '#380694', color: 'white', textAlign: 'center', verticalAlign: 'middle' }}>Sesión más breve<br></br> (Hora : Min)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {reportes.filter(r =>
+                      r.nombre.toLowerCase().includes(busquedaNombre.toLowerCase())
+                    ).length === 0 ? (
+                      <tr><td colSpan="6" className="text-center">No hay datos disponibles.</td></tr>
+                    ) : (
+                      reportes
+                        .filter(r =>
+                          r.nombre.toLowerCase().includes(busquedaNombre.toLowerCase())
+                        )
+                        .map((r, index) => (
                           <tr key={index}>
                             <td>{r.nombre}</td>
                             <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>{r.totalSesiones}</td>
@@ -257,11 +278,11 @@ const ReportesPage = () => {
                             <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>{minutosAHoras(r.sesionMasCorta)}</td>
                           </tr>
                         ))
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </Tab.Pane>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </Tab.Pane>
 
               {/* GRÁFICOS */}
               <Tab.Pane eventKey="grafico">
