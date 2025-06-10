@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FcBusinessman, FcCalendar, FcExpired, FcLike, FcPortraitMode, FcPhone, FcHome, FcHighPriority, FcMediumPriority, FcLowPriority } from "react-icons/fc";
 
@@ -219,7 +219,7 @@ const PacienteForm = ({ pacienteEditado, onExito }) => {
             <button
               type="button"
               className="btn btn-secondary"
-              onClick={() => onExito && onExito()} // Puedes dejarlo así para cancelar
+              onClick={() => onExito && onExito()} 
             >
               Cancelar edición
             </button>

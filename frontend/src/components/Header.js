@@ -28,7 +28,7 @@ const Header = () => {
         <nav className="d-flex align-items-center gap-4 mt-2 mt-md-0">
           <Link to="/dashboard" className="text-white text-decoration-none fw-semibold d-flex align-items-center gap-2">
             <img src="/ListaPacientesLogo.png" alt="Dashboard" height="24" />
-            Dashboard
+            Inicio
           </Link>
           <Link to="/pacientes" className="text-white text-decoration-none fw-semibold d-flex align-items-center gap-2">
             <img src="/LogoPacientes.png" alt="Pacientes" height="24" />

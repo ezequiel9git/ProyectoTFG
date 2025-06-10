@@ -2,7 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { FcCalendar, FcClock, FcBusinessman, FcOk, FcEmptyTrash, FcDocument } from 'react-icons/fc';
 
+/**
+ * Modal para editar o eliminar una cita existente.
+ * Permite modificar los datos de la cita o eliminarla.
+ */
 const CitaEditModal = ({ show, onHide, onSave, onDelete, cita, pacientes }) => {
+  // Estado para los datos del formulario de la cita
   const [formData, setFormData] = useState({
     paciente: '',
     fecha_inicio: '',
@@ -10,26 +15,47 @@ const CitaEditModal = ({ show, onHide, onSave, onDelete, cita, pacientes }) => {
     descripcion: '',
   });
 
+  // Actualiza el formulario cuando cambia la cita seleccionada
   useEffect(() => {
     if (cita) {
+      // Formatea la fecha a 'YYYY-MM-DDTHH:mm'
+      const formatForInput = (dt) => {
+        if (!dt) return '';
+        const d = new Date(dt);
+        const pad = n => n.toString().padStart(2, '0');
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+      };
       setFormData({
         paciente: cita.paciente,
-        fecha_inicio: cita.fecha_inicio,
-        fecha_fin: cita.fecha_fin,
+        fecha_inicio: formatForInput(cita.fecha_inicio),
+        fecha_fin: formatForInput(cita.fecha_fin),
         descripcion: cita.descripcion || '',
       });
     }
   }, [cita]);
 
+  // Maneja los cambios en los campos del formulario
   const handleChange = e => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    onSave(formData);
+  // Maneja el envío del formulario para guardar cambios
+const handleSubmit = e => {
+  e.preventDefault();
+  // Convierte a formato ISO local (sin 'Z')
+  const toLocalISOString = (dt) => {
+    if (!dt) return '';
+    const date = new Date(dt);
+    // yyyy-MM-ddTHH:mm
+    return date.toISOString().slice(0, 16);
   };
+  onSave({
+    ...formData,
+    fecha_inicio: toLocalISOString(formData.fecha_inicio),
+    fecha_fin: toLocalISOString(formData.fecha_fin),
+  });
+};
 
   return (
     <Modal show={show} onHide={onHide} centered>

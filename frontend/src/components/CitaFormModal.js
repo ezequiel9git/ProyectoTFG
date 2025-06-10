@@ -27,11 +27,22 @@ const CitaFormModal = ({ show, onHide, onSubmit, pacientes, fechaInicial }) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    onSubmit(formData);
-    onHide();
+const handleSubmit = e => {
+  e.preventDefault();
+  // Convierte a formato ISO local (sin 'Z')
+  const toLocalISOString = (dt) => {
+    if (!dt) return '';
+    const date = new Date(dt);
+    // yyyy-MM-ddTHH:mm
+    return date.toISOString().slice(0, 16);
   };
+  onSubmit({
+    ...formData,
+    fecha_inicio: toLocalISOString(formData.fecha_inicio),
+    fecha_fin: toLocalISOString(formData.fecha_fin),
+  });
+  onHide();
+};
 
   return (
     <Modal show={show} onHide={onHide} centered>
