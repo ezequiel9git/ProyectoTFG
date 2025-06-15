@@ -42,6 +42,10 @@ const Header = () => {
             <img src="/LogoAgenda.png" alt="Agenda" height="24" />
             Agenda
           </Link>
+          <Link to="/perfil" className="text-white text-decoration-none fw-semibold d-flex align-items-center gap-2">
+            <img src="/LogoPerfil.png" alt="Mi perfil" height="24" />
+            Mi perfil
+          </Link>
           <button
             onClick={handleLogout}
             className="btn btn-light btn-sm ms-2"

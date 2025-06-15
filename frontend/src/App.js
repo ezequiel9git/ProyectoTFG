@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './utils/PrivateRoute';
 import PrivateLayout from './layouts/PrivateLayout';
-
+import PerfilPage from './pages/PerfilPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import Dashboard from './pages/Dashboard';
@@ -36,6 +36,16 @@ function App() {
               </PrivateRoute>
             }
           />
+          <Route
+                path="/perfil"
+                element={ 
+                  <PrivateRoute>
+                    <PrivateLayout>
+                      <PerfilPage />
+                    </PrivateLayout>
+                  </PrivateRoute>
+                }
+              />
           <Route
             path="/pacientes"
             element={
